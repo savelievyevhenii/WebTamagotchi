@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using WebTamagotchi.Dal;
 using Microsoft.EntityFrameworkCore;
 using WebTamagotchi.Dal.Services;
@@ -9,11 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Host.ConfigureServices(service =>
-{
-    service.AddDbContext<WebTamagotchiDbContext>(option => option.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
-    service.AddTransient<IUserService, UserService>();
-});
+builder.Services.AddDbContext<WebTamagotchiDbContext>(option => option.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString"))).AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 
