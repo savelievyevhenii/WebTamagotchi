@@ -1,13 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebTamagotchi.Dal.Entity;
 
-public class User
+public class User : IdentityUser<long>
 {
-    [Key]
-    public int Id { get; set; }
-    
     public string Username { get; set; }
-    
+
     public string Email { get; set; }
+
+    public string? RefreshToken { get; set; }
+
+    public DateTime RefreshTokenExpiryTime { get; set; }
 }
