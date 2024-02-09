@@ -1,22 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WebTamagotchi.Dal.Entity;
 
 namespace WebTamagotchi.Dal;
 
-public class WebTamagotchiDbContext : DbContext
+public class WebTamagotchiDbContext : IdentityDbContext<User, IdentityRole<long>, long>
 {
-    public DbSet<User> Users { get; set; }
-
-    public WebTamagotchiDbContext()
-    {
-    }
-
     public WebTamagotchiDbContext(DbContextOptions<WebTamagotchiDbContext> options) : base(options)
     {
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<User>().HasKey(x => x.Id);
     }
 }

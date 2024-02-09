@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebTamagotchi.Dal;
@@ -11,9 +12,11 @@ using WebTamagotchi.Dal;
 namespace WebTamagotchi.Dal.Migrations
 {
     [DbContext(typeof(WebTamagotchiDbContext))]
-    partial class WebTamagotchiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240209124834_UserIdentityFix")]
+    partial class UserIdentityFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

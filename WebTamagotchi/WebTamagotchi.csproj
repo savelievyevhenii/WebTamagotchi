@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\WebTamagotchi.Dal\WebTamagotchi.Dal.csproj" />
+      <ProjectReference Include="..\WebTamagotchi.Identity\WebTamagotchi.Identity.csproj" />
     </ItemGroup>
 
     <ItemGroup>
