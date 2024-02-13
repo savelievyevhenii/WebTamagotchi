@@ -1,7 +1,7 @@
-﻿using WebTamagotchi.Dto;
+﻿using WebTamagotchi.Identity.Dto;
 using WebTamagotchi.Identity.Models;
 
-namespace WebTamagotchi.Converters;
+namespace WebTamagotchi.Identity.Converters;
 
 public class RegistrationRequestConverter
 {

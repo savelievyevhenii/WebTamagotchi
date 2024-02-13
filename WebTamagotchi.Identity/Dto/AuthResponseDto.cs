@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace WebTamagotchi.Dto;
+namespace WebTamagotchi.Identity.Dto;
 
 public class AuthResponseDto
 {

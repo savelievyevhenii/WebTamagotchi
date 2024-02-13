@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebTamagotchi.Converters;
-using WebTamagotchi.Dto;
+using WebTamagotchi.Identity.Converters;
+using WebTamagotchi.Identity.Dto;
 using WebTamagotchi.Identity.Interfaces;
-using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Controllers;
 
 [ApiController]
 [Route("api/identity")]
-public class IdentityController: ControllerBase
+public class IdentityController : ControllerBase
 {
     private readonly IIdentityService _identityService;
 
@@ -21,7 +20,7 @@ public class IdentityController: ControllerBase
     public async Task<ActionResult<AuthResponseDto>> Authenticate([FromBody] AuthRequestDto requestDto)
     {
         var request = AuthRequestConverter.ToModel(requestDto);
-        
+
         if (!ModelState.IsValid)
         {
             return BadRequest(request);
@@ -31,7 +30,7 @@ public class IdentityController: ControllerBase
         {
             var response = await _identityService.Authenticate(request);
             var responseDto = AuthResponseConverter.ToDto(response);
-            
+
             return Ok(responseDto);
         }
         catch (UnauthorizedAccessException)
@@ -43,12 +42,12 @@ public class IdentityController: ControllerBase
             return BadRequest($"Authentication failed: {e.Message}");
         }
     }
-        
+
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegistrationRequestDto requestDto)
     {
         var request = RegistrationRequestConverter.ToModel(requestDto);
-        
+
         if (!ModelState.IsValid)
         {
             return BadRequest(request);
