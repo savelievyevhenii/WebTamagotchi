@@ -9,7 +9,7 @@ public interface IIdentityService
 
     Task<AuthRequest> Register(RegistrationRequest request);
 
-    Task RefreshToken(TokenModel? tokenModel);
+    Task<IActionResult> RefreshToken(TokenModel? tokenModel);
 
     Task Revoke(string username);
 

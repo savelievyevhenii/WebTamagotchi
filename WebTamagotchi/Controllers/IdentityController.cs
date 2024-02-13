@@ -2,6 +2,7 @@
 using WebTamagotchi.Identity.Converters;
 using WebTamagotchi.Identity.Dto;
 using WebTamagotchi.Identity.Interfaces;
+using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Controllers;
 
@@ -63,6 +64,21 @@ public class IdentityController : ControllerBase
         catch (Exception e)
         {
             return BadRequest($"Registration failed: {e.Message}");
+        }
+    }
+
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken(TokenModelDto tokenDto)
+    {
+        var tokenModel = TokenModelConverter.ToModel(tokenDto);
+
+        try
+        {
+            return await _identityService.RefreshToken(tokenModel);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
         }
     }
 }

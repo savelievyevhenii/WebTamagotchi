@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.Dal;
 using WebTamagotchi.Dal.Entity;
 using WebTamagotchi.Identity.Exceptions;
@@ -92,10 +94,43 @@ namespace WebTamagotchi.Identity.Services
             };
         }
 
-        public Task RefreshToken(TokenModel? tokenModel)
+        public async Task<IActionResult> RefreshToken(TokenModel? tokenModel)
         {
-            throw new NotImplementedException();
+            if (tokenModel is null)
+            {
+                throw new Exception("Invalid client request");
+            }
+
+            var accessToken = tokenModel.AccessToken;
+            var refreshToken = tokenModel.RefreshToken;
+
+            var principal = _configuration.GetPrincipalFromExpiredToken(accessToken)
+                            ?? throw new Exception("Invalid access token or refresh token");
+
+            var username = principal.Identity!.Name;
+            var user = await _userManager.FindByNameAsync(username!)
+                       ?? throw new Exception("Invalid access token or refresh token");
+
+            if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            {
+                throw new Exception("Invalid access token or refresh token");
+            }
+
+            var newAccessToken = _configuration.CreateToken(principal.Claims.ToList());
+            var newRefreshToken = _configuration.GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            var result = new
+            {
+                accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                refreshToken = newRefreshToken
+            };
+
+            return new ObjectResult(result);
         }
+
 
         public Task Revoke(string username)
         {
