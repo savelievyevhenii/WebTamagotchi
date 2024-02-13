@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebTamagotchi.Converters;
 using WebTamagotchi.Dto;
 using WebTamagotchi.Identity.Interfaces;
 using WebTamagotchi.Identity.Models;
@@ -19,11 +20,7 @@ public class IdentityController: ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponseDto>> Authenticate([FromBody] AuthRequestDto requestDto)
     {
-        var request = new AuthRequest
-        {
-            Email = requestDto.Email,
-            Password = requestDto.Password
-        };
+        var request = AuthRequestConverter.ToModel(requestDto);
         
         if (!ModelState.IsValid)
         {
@@ -33,13 +30,7 @@ public class IdentityController: ControllerBase
         try
         {
             var response = await _identityService.Authenticate(request);
-            var responseDto = new AuthResponseDto
-            {
-                Username = response.Username,
-                Email = response.Email,
-                Token = response.Token,
-                RefreshToken = response.RefreshToken
-            };
+            var responseDto = AuthResponseConverter.ToDto(response);
             
             return Ok(responseDto);
         }
@@ -56,12 +47,7 @@ public class IdentityController: ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegistrationRequestDto requestDto)
     {
-        var request = new RegistrationRequest
-        {
-            Email = requestDto.Email,
-            Password = requestDto.Password,
-            PasswordConfirm = requestDto.PasswordConfirm,
-        };
+        var request = RegistrationRequestConverter.ToModel(requestDto);
         
         if (!ModelState.IsValid)
         {
@@ -71,11 +57,7 @@ public class IdentityController: ControllerBase
         try
         {
             var authRequest = await _identityService.Register(request);
-            var authRequestDto = new AuthRequestDto
-            {
-                Email = authRequest.Email,
-                Password = authRequest.Password
-            };
+            var authRequestDto = AuthRequestConverter.ToDto(authRequest);
 
             return await Authenticate(authRequestDto);
         }

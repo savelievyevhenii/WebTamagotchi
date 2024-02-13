@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using WebTamagotchi.Dal;
@@ -27,7 +25,7 @@ public class IdentityService : IIdentityService
         _tokenService = tokenService;
     }
 
-    public async Task<AuthResponse> Authenticate([FromBody] AuthRequest request)
+    public async Task<AuthResponse> Authenticate(AuthRequest request)
     {
         var managedUser = await _userManager.FindByEmailAsync(request.Email);
 
