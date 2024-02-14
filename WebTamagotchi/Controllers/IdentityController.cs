@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.Identity.Converters;
 using WebTamagotchi.Identity.Dto;
 using WebTamagotchi.Identity.Interfaces;
@@ -24,7 +25,7 @@ public class IdentityController : ControllerBase
 
         if (!ModelState.IsValid)
         {
-            return BadRequest(request);
+            return BadRequest(ModelState);
         }
 
         try
@@ -51,7 +52,7 @@ public class IdentityController : ControllerBase
 
         if (!ModelState.IsValid)
         {
-            return BadRequest(request);
+            return BadRequest(ModelState);
         }
 
         try
@@ -70,15 +71,29 @@ public class IdentityController : ControllerBase
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModelDto tokenDto)
     {
-        var tokenModel = TokenModelConverter.ToModel(tokenDto);
-
         try
         {
+            var tokenModel = TokenModelConverter.ToModel(tokenDto);
             return await _identityService.RefreshToken(tokenModel);
         }
         catch (Exception e)
         {
-            return BadRequest(e.Message);
+            return BadRequest($"Refresh token failed: {e.Message}");
+        }
+    }
+    
+    [Authorize]
+    [HttpPost("revoke/{username}")]
+    public async Task<IActionResult> Revoke(string username)
+    {
+        try
+        {
+            await _identityService.Revoke(username);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest($"Revoke failed: {e.Message}");
         }
     }
 }

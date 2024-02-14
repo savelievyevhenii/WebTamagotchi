@@ -22,7 +22,8 @@ namespace WebTamagotchi.Identity.Services
         private readonly IConfiguration _configuration;
         private readonly ITokenService _tokenService;
 
-        public IdentityService(ITokenService tokenService, WebTamagotchiDbContext context, UserManager<User> userManager,
+        public IdentityService(ITokenService tokenService, WebTamagotchiDbContext context,
+            UserManager<User> userManager,
             IConfiguration configuration)
         {
             _userManager = userManager;
@@ -33,16 +34,16 @@ namespace WebTamagotchi.Identity.Services
 
         public async Task<AuthResponse> Authenticate(AuthRequest request)
         {
-            var managedUser = await _userManager.FindByEmailAsync(request.Email) 
-                ?? throw new UserNotFoundException(request.Email);
+            var managedUser = await _userManager.FindByEmailAsync(request.Email)
+                              ?? throw new UserNotFoundException(request.Email);
 
             if (!await _userManager.CheckPasswordAsync(managedUser, request.Password))
             {
                 throw new PasswordValidationException();
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email) 
-                ?? throw new UnauthorizedAccessException();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email)
+                       ?? throw new UnauthorizedAccessException();
 
             var roleIds = await _context.UserRoles
                 .Where(r => r.UserId == user.Id)
@@ -54,7 +55,8 @@ namespace WebTamagotchi.Identity.Services
             var accessToken = _tokenService.CreateToken(user, roles);
 
             user.RefreshToken = _configuration.GenerateRefreshToken();
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_configuration.GetValue<int>("Jwt:RefreshTokenValidityInDays"));
+            user.RefreshTokenExpiryTime =
+                DateTime.UtcNow.AddDays(_configuration.GetValue<int>("Jwt:RefreshTokenValidityInDays"));
 
             await _context.SaveChangesAsync();
 
@@ -83,7 +85,7 @@ namespace WebTamagotchi.Identity.Services
             }
 
             var findUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == request.Email)
-                ?? throw new UserNotFoundException(request.Email);
+                           ?? throw new UserNotFoundException(request.Email);
 
             await _userManager.AddToRoleAsync(findUser, RolesConstants.Player);
 
@@ -131,10 +133,13 @@ namespace WebTamagotchi.Identity.Services
             return new ObjectResult(result);
         }
 
-
-        public Task Revoke(string username)
+        public async Task Revoke(string username)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByNameAsync(username)
+                       ?? throw new Exception("Invalid user name");
+
+            user.RefreshToken = null;
+            await _userManager.UpdateAsync(user);
         }
 
         public Task RevokeAll()

@@ -81,6 +81,8 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+EnsureRolesCreated(app.Services);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -96,3 +98,17 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+static void EnsureRolesCreated(IServiceProvider serviceProvider)
+{
+    using var scope = serviceProvider.CreateScope();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<long>>>();
+
+    foreach (var roleName in new[] { RolesConstants.Player, RolesConstants.Administrator })
+    {
+        if (!roleManager.RoleExistsAsync(roleName).Result)
+        {
+            roleManager.CreateAsync(new IdentityRole<long>(roleName)).Wait();
+        }
+    }
+}
