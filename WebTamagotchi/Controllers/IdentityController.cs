@@ -96,4 +96,19 @@ public class IdentityController : ControllerBase
             return BadRequest($"Revoke failed: {e.Message}");
         }
     }
+    
+    [Authorize]
+    [HttpPost("revoke-all")]
+    public async Task<IActionResult> RevokeAll()
+    {
+        try
+        {
+            await _identityService.RevokeAll();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest($"Revoke failed: {e.Message}");
+        }
+    }
 }

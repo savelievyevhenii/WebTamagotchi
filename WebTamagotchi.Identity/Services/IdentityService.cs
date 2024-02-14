@@ -142,9 +142,14 @@ namespace WebTamagotchi.Identity.Services
             await _userManager.UpdateAsync(user);
         }
 
-        public Task RevokeAll()
+        public async Task RevokeAll()
         {
-            throw new NotImplementedException();
+            var users = _userManager.Users.ToList();
+            foreach (var user in users)
+            {
+                user.RefreshToken = null;
+                await _userManager.UpdateAsync(user);
+            }
         }
     }
 }
