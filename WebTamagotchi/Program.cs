@@ -14,10 +14,17 @@ using WebTamagotchi.Identity.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddDbContext<WebTamagotchiDbContext>(option =>
     option.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
+
+builder.Services.AddCors(c => c.AddPolicy("cors", options =>
+{
+    options.AllowAnyHeader();
+    options.AllowCredentials();
+    options.AllowAnyMethod();
+    options.WithOrigins(builder.Configuration.GetSection("Cors:Urls").Get<string[]>()!);
+}));
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IIdentityService, IdentityService>();
@@ -27,24 +34,26 @@ builder.Services.AddAuthentication(
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
+            ValidIssuer = builder.Configuration["Jwt:Issuer"]!,
+            ValidAudience = builder.Configuration["Jwt:Audience"]!,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!)),
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"]!,
-            ValidAudience = builder.Configuration["Jwt:Audience"]!,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
+            ValidateIssuerSigningKey = true
         };
     });
 
-builder.Services.AddAuthorization(options =>
-    options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-        .RequireAuthenticatedUser().Build());
+builder.Services.AddAuthorization(options => options.DefaultPolicy =
+    new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+        .RequireAuthenticatedUser()
+        .Build());
 
 builder.Services.AddIdentity<User, IdentityRole<long>>()
     .AddEntityFrameworkStores<WebTamagotchiDbContext>()
@@ -83,7 +92,6 @@ var app = builder.Build();
 
 EnsureRolesCreated(app.Services);
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -91,13 +99,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseCors("cors");
+
 app.MapControllers();
 
 app.Run();
+return;
 
 static void EnsureRolesCreated(IServiceProvider serviceProvider)
 {

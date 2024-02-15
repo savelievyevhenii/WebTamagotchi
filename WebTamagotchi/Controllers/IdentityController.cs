@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.Identity.Converters;
 using WebTamagotchi.Identity.Dto;
 using WebTamagotchi.Identity.Interfaces;
-using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Controllers;
 

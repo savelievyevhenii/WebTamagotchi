@@ -14,7 +14,7 @@ namespace WebTamagotchi.Identity.Extensions;
 
 public static class JwtBearerExtensions
 {
-    public static List<Claim> CreateClaims(this User user, List<IdentityRole<long>> roles)
+    public static IEnumerable<Claim> CreateClaims(this User user, IEnumerable<IdentityRole<long>> roles)
     {
         var claims = new List<Claim>
         {
@@ -29,7 +29,7 @@ public static class JwtBearerExtensions
         return claims;
     }
 
-    public static SigningCredentials CreateSigningCredentials(this IConfiguration configuration)
+    private static SigningCredentials CreateSigningCredentials(this IConfiguration configuration)
     {
         return new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)),
