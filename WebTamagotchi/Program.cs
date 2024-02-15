@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebTamagotchi.Dal.Entity;
+using WebTamagotchi.Dal.Services;
+using WebTamagotchi.Dal.Services.Impl;
 using WebTamagotchi.Identity.Interfaces;
 using WebTamagotchi.Identity.Models;
 using WebTamagotchi.Identity.Services;
@@ -28,6 +30,7 @@ builder.Services.AddCors(c => c.AddPolicy("cors", options =>
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthentication(
         options =>
