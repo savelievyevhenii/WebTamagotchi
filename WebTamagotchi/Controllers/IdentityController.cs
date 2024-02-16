@@ -16,6 +16,13 @@ public class IdentityController : ControllerBase
     {
         _identityService = identityService;
     }
+    
+    [Authorize]
+    [HttpGet("api/test-auth")]
+    public IActionResult TestAuthorization()
+    {
+        return Ok("You're Authorized");
+    }
 
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponseDto>> Authenticate([FromBody] AuthRequestDto requestDto)

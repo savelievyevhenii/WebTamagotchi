@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using WebTamagotchi.Dal.Constants;
 using WebTamagotchi.Dal.Entity;
 using WebTamagotchi.Dal.Exceptions;
 

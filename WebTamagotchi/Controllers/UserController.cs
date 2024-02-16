@@ -2,7 +2,6 @@
 using WebTamagotchi.Dal.Constants;
 using WebTamagotchi.Dal.Converters;
 using WebTamagotchi.Dal.Dto;
-using WebTamagotchi.Dal.Entity;
 using WebTamagotchi.Dal.Services;
 
 namespace WebTamagotchi.Controllers;
