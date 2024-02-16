@@ -5,7 +5,6 @@ using WebTamagotchi.Identity;
 using WebTamagotchi.Identity.Enums;
 using WebTamagotchi.Identity.Models;
 using WebTamagotchi.Identity.Services;
-using WebTamagotchi.Identity.Services.Impl;
 
 namespace WebTamagotchi.Controllers;
 
@@ -15,9 +14,9 @@ public class UsersController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly WTIdentityDbContext _context;
-    private readonly TokenService _tokenService;
+    private readonly ITokenService _tokenService;
 
-    public UsersController(UserManager<ApplicationUser> userManager, WTIdentityDbContext context, TokenService tokenService, ILogger<UsersController> logger)
+    public UsersController(UserManager<ApplicationUser> userManager, WTIdentityDbContext context, ITokenService tokenService, ILogger<UsersController> logger)
     {
         _userManager = userManager;
         _context = context;
