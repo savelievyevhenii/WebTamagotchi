@@ -4,7 +4,5 @@ namespace WebTamagotchi.Dal.Services;
 
 public interface IUserService
 {
-    Task MakePlayer(User user);
-
-    Task MakeAdministrator(User user);
+    Task UpdateUserRole(User user, string fromRole ,string toRole);
 }

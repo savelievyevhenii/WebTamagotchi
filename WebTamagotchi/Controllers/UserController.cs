@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebTamagotchi.Dal.Constants;
 using WebTamagotchi.Dal.Converters;
 using WebTamagotchi.Dal.Dto;
+using WebTamagotchi.Dal.Entity;
 using WebTamagotchi.Dal.Services;
-using WebTamagotchi.Identity.Converters;
 
 namespace WebTamagotchi.Controllers;
 
@@ -16,48 +17,34 @@ public class UserController : ControllerBase
     {
         _userService = userService;
     }
-    
+
     [HttpPost("make-player")]
     public async Task<ActionResult> MakePlayer([FromBody] UserDto userDto)
     {
-        var user = UserConverter.ToModel(userDto);
-
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         try
         {
-            await _userService.MakePlayer(user);
-
+            var user = UserConverter.ToModel(userDto);
+            await _userService.UpdateUserRole(user, UserRoles.Administrator, UserRoles.Player);
             return Ok();
         }
         catch (Exception e)
         {
-            return BadRequest($"MakePlayer failed: {e.Message}");
+            return BadRequest($"Make player failed: {e.Message}");
         }
     }
-    
+
     [HttpPost("make-administrator")]
     public async Task<ActionResult> MakeAdministrator([FromBody] UserDto userDto)
     {
-        var user = UserConverter.ToModel(userDto);
-
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         try
         {
-            await _userService.MakeAdministrator(user);
-
+            var user = UserConverter.ToModel(userDto);
+            await _userService.UpdateUserRole(user, UserRoles.Player, UserRoles.Administrator);
             return Ok();
         }
         catch (Exception e)
         {
-            return BadRequest($"MakeAdministrator failed: {e.Message}");
+            return BadRequest($"Make administrator failed: {e.Message}");
         }
     }
 }

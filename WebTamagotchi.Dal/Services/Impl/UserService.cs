@@ -13,25 +13,17 @@ public class UserService : IUserService
 
     public UserService(UserManager<User> userManager, WebTamagotchiDbContext context)
     {
-        _userManager = userManager;
-        _context = context;
+        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
-    
-    public async Task MakePlayer(User user)
+
+    public async Task UpdateUserRole(User user, string fromRole ,string toRole)
     {
         var findUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == user.Email)
                        ?? throw new UserNotFoundException(user.Email);
-
-        await _userManager.RemoveFromRoleAsync(findUser, UserRoles.Administrator);
-        await _userManager.AddToRoleAsync(findUser, UserRoles.Player);
-    }
-
-    public async Task MakeAdministrator(User user)
-    {
-        var findUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == user.Email)
-                       ?? throw new UserNotFoundException(user.Email);
+        var roles = await _userManager.GetRolesAsync(user);
         
-        await _userManager.RemoveFromRoleAsync(findUser, UserRoles.Player);
-        await _userManager.AddToRoleAsync(findUser, UserRoles.Administrator);
+        await _userManager.RemoveFromRoleAsync(findUser, fromRole);
+        await _userManager.AddToRoleAsync(findUser, toRole);
     }
 }
