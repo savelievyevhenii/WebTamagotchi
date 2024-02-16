@@ -4,5 +4,5 @@ namespace WebTamagotchi.Identity.Services;
 
 public interface ITokenService
 {
-    public Task CreateToken(ApplicationUser user);
+    string CreateToken(ApplicationUser user);
 }
