@@ -1,49 +1,101 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebTamagotchi.Dal.Constants;
-using WebTamagotchi.Dal.Converters;
-using WebTamagotchi.Dal.Dto;
-using WebTamagotchi.Dal.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using WebTamagotchi.Identity;
+using WebTamagotchi.Identity.Enums;
+using WebTamagotchi.Identity.Models;
+using WebTamagotchi.Identity.Services;
+using WebTamagotchi.Identity.Services.Impl;
 
 namespace WebTamagotchi.Controllers;
 
 [ApiController]
-[Route("api/user")]
-public class UserController : ControllerBase
+[Route("/api/[controller]")]
+public class UsersController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly WTIdentityDbContext _context;
+    private readonly TokenService _tokenService;
 
-    public UserController(IUserService userService)
+    public UsersController(UserManager<ApplicationUser> userManager, WTIdentityDbContext context, TokenService tokenService, ILogger<UsersController> logger)
     {
-        _userService = userService;
+        _userManager = userManager;
+        _context = context;
+        _tokenService = tokenService;
     }
 
-    [HttpPost("make-player")]
-    public async Task<ActionResult> MakePlayer([FromBody] UserDto userDto)
+    [Authorize]
+    [HttpGet("test-auth")]
+    public IActionResult TestAuthorization()
     {
-        try
-        {
-            var user = UserConverter.ToModel(userDto);
-            await _userService.UpdateUserRole(user, UserRoles.Administrator, UserRoles.Player);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Make player failed: {e.Message}");
-        }
+        return Ok("You're Authorized");
     }
-
-    [HttpPost("make-administrator")]
-    public async Task<ActionResult> MakeAdministrator([FromBody] UserDto userDto)
+    
+    [HttpPost]
+    [Route("register")]
+    public async Task<IActionResult> Register(RegistrationRequest request)
     {
-        try
+        if (!ModelState.IsValid)
         {
-            var user = UserConverter.ToModel(userDto);
-            await _userService.UpdateUserRole(user, UserRoles.Player, UserRoles.Administrator);
-            return Ok();
+            return BadRequest(ModelState);
         }
-        catch (Exception e)
+        
+        var result = await _userManager.CreateAsync(
+            new ApplicationUser { UserName = request.Username, Email = request.Email, Role = Role.Player },
+            request.Password!
+        );
+
+        if (result.Succeeded)
         {
-            return BadRequest($"Make administrator failed: {e.Message}");
+            request.Password = "";
+            return CreatedAtAction(nameof(Register), new { email = request.Email, role = request.Role }, request);
         }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(error.Code, error.Description);
+        }
+
+        return BadRequest(ModelState);
+    }
+    
+    
+    [HttpPost]
+    [Route("login")]
+    public async Task<ActionResult<AuthResponse>> Authenticate([FromBody] AuthRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var managedUser = await _userManager.FindByEmailAsync(request.Email!);
+        if (managedUser == null)
+        {
+            return BadRequest("Bad credentials");
+        }
+
+        var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, request.Password!);
+        if (!isPasswordValid)
+        {
+            return BadRequest("Bad credentials");
+        }
+
+        var userInDb = _context.Users.FirstOrDefault(u => u.Email == request.Email);
+        
+        if (userInDb is null)
+        {
+            return Unauthorized();
+        }
+        
+        var accessToken = _tokenService.CreateToken(userInDb);
+        await _context.SaveChangesAsync();
+        
+        return Ok(new AuthResponse
+        {
+            Username = userInDb.UserName,
+            Email = userInDb.Email,
+            Token = accessToken,
+        });
     }
 }

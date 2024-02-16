@@ -2,9 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi", "WebTamagotchi\WebTamagotchi.csproj", "{417F3C9B-31AA-49C2-91AB-0584A160F5BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi.Dal", "WebTamagotchi.Dal\WebTamagotchi.Dal.csproj", "{DEF3FCBD-2D72-4D5C-BD18-3F89FF7E9B3B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi.Identity", "WebTamagotchi.Identity\WebTamagotchi.Identity.csproj", "{E7B2A371-33CE-4CD4-A6DD-B9E5DADFC704}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi.Identity", "WebTamagotchi.Identity\WebTamagotchi.Identity.csproj", "{B5631834-7EFE-41CD-819B-692E223787A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +14,9 @@ Global
 		{417F3C9B-31AA-49C2-91AB-0584A160F5BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{417F3C9B-31AA-49C2-91AB-0584A160F5BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{417F3C9B-31AA-49C2-91AB-0584A160F5BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DEF3FCBD-2D72-4D5C-BD18-3F89FF7E9B3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DEF3FCBD-2D72-4D5C-BD18-3F89FF7E9B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DEF3FCBD-2D72-4D5C-BD18-3F89FF7E9B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DEF3FCBD-2D72-4D5C-BD18-3F89FF7E9B3B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7B2A371-33CE-4CD4-A6DD-B9E5DADFC704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E7B2A371-33CE-4CD4-A6DD-B9E5DADFC704}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E7B2A371-33CE-4CD4-A6DD-B9E5DADFC704}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7B2A371-33CE-4CD4-A6DD-B9E5DADFC704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5631834-7EFE-41CD-819B-692E223787A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5631834-7EFE-41CD-819B-692E223787A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5631834-7EFE-41CD-819B-692E223787A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5631834-7EFE-41CD-819B-692E223787A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
