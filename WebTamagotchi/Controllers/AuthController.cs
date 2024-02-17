@@ -86,4 +86,34 @@ public class AuthController : ControllerBase
             return BadRequest($"Refresh token failed: {e.Message}");
         }
     }
+    
+    [Authorize]
+    [HttpPost("revoke/{username}")]
+    public async Task<IActionResult> Revoke(string username)
+    {
+        try
+        {
+            await _authService.Revoke(username);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest($"Revoke failed: {e.Message}");
+        }
+    }
+    [Authorize]
+    [HttpPost("revoke-all")]
+    public async Task<IActionResult> RevokeAll()
+    {
+        try
+        {
+            await _authService.RevokeAll();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest($"Revoke failed: {e.Message}");
+        }
+    }
+    
 }

@@ -105,4 +105,23 @@ public class AuthService : IAuthService
 
         return new ObjectResult(result);
     }
+    
+    public async Task Revoke(string username)
+    {
+        var user = await _userManager.FindByNameAsync(username)
+                   ?? throw new UserNotFoundException(username);
+
+        user.RefreshToken = null;
+        await _userManager.UpdateAsync(user);
+    }
+
+    public async Task RevokeAll()
+    {
+        var users = _userManager.Users.ToList();
+        foreach (var user in users)
+        {
+            user.RefreshToken = null;
+            await _userManager.UpdateAsync(user);
+        }
+    }
 }
