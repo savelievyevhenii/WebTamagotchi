@@ -32,13 +32,13 @@ namespace WebTamagotchi.Identity.Services.Impl
 
             return tokenHandler.WriteToken(token);
         }
-        
+
         public string GenerateRefreshToken(ApplicationUser user)
         {
             var randomNumber = new byte[64];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomNumber);
-            
+
             user.RefreshToken = Convert.ToBase64String(randomNumber);
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(ExpirationDays);
 
@@ -47,7 +47,48 @@ namespace WebTamagotchi.Identity.Services.Impl
             return user.RefreshToken;
         }
 
-        private JwtSecurityToken CreateJwtToken(IEnumerable<Claim> claims, SigningCredentials credentials, DateTime expiration)
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string? token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new ArgumentException("Token cannot be null or empty");
+            }
+
+            var symmetricSecurityKey = _configuration.GetValue<string>("JwtTokenSettings:SymmetricSecurityKey");
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(symmetricSecurityKey ?? string.Empty)),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+    
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+
+                if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                    !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                        StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new SecurityTokenException("Invalid token algorithm");
+                }
+
+                return principal;
+            }
+            catch (Exception ex)
+            {
+                throw new SecurityTokenException("Token validation failed", ex);
+            }
+        }
+
+
+        private JwtSecurityToken CreateJwtToken(IEnumerable<Claim> claims, SigningCredentials credentials,
+            DateTime expiration)
         {
             var validIssuer = _configuration.GetValue<string>("JwtTokenSettings:ValidIssuer");
             var validAudience = _configuration.GetValue<string>("JwtTokenSettings:ValidAudience");

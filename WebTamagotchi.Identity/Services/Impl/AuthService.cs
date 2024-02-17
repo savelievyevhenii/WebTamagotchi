@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.Identity.Enums;
 using WebTamagotchi.Identity.Exceptions;
 using WebTamagotchi.Identity.Models;
@@ -53,9 +54,9 @@ public class AuthService : IAuthService
     public async Task<AuthRequest> Register(RegistrationRequest request)
     {
         var user = new ApplicationUser { UserName = request.Email, Email = request.Email, Role = Role.Player };
-    
+
         var result = await _userManager.CreateAsync(user, request.Password!);
-    
+
         if (result.Succeeded)
         {
             return new AuthRequest
@@ -64,8 +65,44 @@ public class AuthService : IAuthService
                 Password = request.Password
             };
         }
-    
+
         var firstErrorDescription = result.Errors.FirstOrDefault()?.Description ?? "Registration failed.";
         throw new Exception(firstErrorDescription);
+    }
+
+    public async Task<IActionResult> RefreshToken(TokenModel? tokenModel)
+    {
+        if (tokenModel is null)
+        {
+            throw new InvalidClientRequestException();
+        }
+
+        var accessToken = tokenModel.AccessToken;
+        var refreshToken = tokenModel.RefreshToken;
+
+        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken)
+                        ?? throw new InvalidTokenException();
+
+        var user = await _userManager.FindByNameAsync(principal.Identity!.Name!)
+                   ?? throw new InvalidTokenException();
+
+        if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        {
+            throw new InvalidTokenException();
+        }
+
+        var newAccessToken = _tokenService.CreateToken(user);
+        var newRefreshToken = _tokenService.GenerateRefreshToken(user);
+
+        user.RefreshToken = newRefreshToken;
+        await _userManager.UpdateAsync(user);
+
+        var result = new
+        {
+            accessToken = newAccessToken,
+            refreshToken = newRefreshToken
+        };
+
+        return new ObjectResult(result);
     }
 }

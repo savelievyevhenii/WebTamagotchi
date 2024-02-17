@@ -72,4 +72,18 @@ public class AuthController : ControllerBase
             return BadRequest($"Registration failed: {e.Message}");
         }
     }
+    
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken(TokenModelDto tokenDto)
+    {
+        try
+        {
+            var tokenModel = TokenModelConverter.ToModel(tokenDto);
+            return await _authService.RefreshToken(tokenModel);
+        }
+        catch (Exception e)
+        {
+            return BadRequest($"Refresh token failed: {e.Message}");
+        }
+    }
 }
