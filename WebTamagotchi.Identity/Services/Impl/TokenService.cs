@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ namespace WebTamagotchi.Identity.Services.Impl
     public class TokenService : ITokenService
     {
         private const int ExpirationMinutes = 30;
+        private const int ExpirationDays = 90;
         private readonly IConfiguration _configuration;
         private readonly ILogger<TokenService> _logger;
 
@@ -29,6 +31,20 @@ namespace WebTamagotchi.Identity.Services.Impl
             _logger.LogInformation("JWT Token created");
 
             return tokenHandler.WriteToken(token);
+        }
+        
+        public string GenerateRefreshToken(ApplicationUser user)
+        {
+            var randomNumber = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            
+            user.RefreshToken = Convert.ToBase64String(randomNumber);
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(ExpirationDays);
+
+            _logger.LogInformation("Refresh Token created");
+
+            return user.RefreshToken;
         }
 
         private JwtSecurityToken CreateJwtToken(IEnumerable<Claim> claims, SigningCredentials credentials, DateTime expiration)

@@ -37,6 +37,7 @@ public class AuthService : IAuthService
         }
 
         var accessToken = _tokenService.CreateToken(foundUser);
+        var refreshToken = _tokenService.GenerateRefreshToken(foundUser);
 
         await _context.SaveChangesAsync();
 
@@ -44,7 +45,8 @@ public class AuthService : IAuthService
         {
             Username = foundUser.UserName,
             Email = foundUser.Email!,
-            Token = accessToken
+            Token = accessToken,
+            RefreshToken = refreshToken
         };
     }
 

@@ -72,5 +72,4 @@ public class AuthController : ControllerBase
             return BadRequest($"Registration failed: {e.Message}");
         }
     }
-
 }
