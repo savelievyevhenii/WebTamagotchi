@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using WebTamagotchi.Identity.Enums;
 using WebTamagotchi.Identity.Exceptions;
 using WebTamagotchi.Identity.Models;
 
@@ -19,7 +18,6 @@ public class AuthService : IAuthService
         _context = context;
         _tokenService = tokenService;
     }
-
 
     public async Task<AuthResponse> Authenticate(AuthRequest request)
     {
@@ -50,9 +48,22 @@ public class AuthService : IAuthService
         };
     }
 
-
-    public Task<AuthResponse> Register(RegistrationRequest request)
+    public async Task<AuthRequest> Register(RegistrationRequest request)
     {
-        throw new NotImplementedException();
+        var user = new ApplicationUser { UserName = request.Email, Email = request.Email, Role = Role.Player };
+    
+        var result = await _userManager.CreateAsync(user, request.Password!);
+    
+        if (result.Succeeded)
+        {
+            return new AuthRequest
+            {
+                Email = request.Email,
+                Password = request.Password
+            };
+        }
+    
+        var firstErrorDescription = result.Errors.FirstOrDefault()?.Description ?? "Registration failed.";
+        throw new Exception(firstErrorDescription);
     }
 }

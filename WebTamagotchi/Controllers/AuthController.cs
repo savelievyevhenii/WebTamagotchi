@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.Converters.Identity;
 using WebTamagotchi.Dto.Identity;
-using WebTamagotchi.Identity.Models;
 using WebTamagotchi.Identity.Services;
 
 namespace WebTamagotchi.Controllers;
@@ -27,7 +26,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponse>> Authenticate([FromBody] AuthRequestDto requestDto)
+    public async Task<ActionResult<AuthResponseDto>> Authenticate([FromBody] AuthRequestDto requestDto)
     {
         try
         {
@@ -51,4 +50,27 @@ public class AuthController : ControllerBase
             return BadRequest($"Authentication failed: {e.Message}");
         }
     }
+    
+    [HttpPost("register")]
+    public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegistrationRequestDto requestDto)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
+            var request = RegistrationRequestConverter.ToModel(requestDto);
+            var authRequest = await _authService.Register(request);
+            var authRequestDto = AuthRequestConverter.ToDto(authRequest);
+
+            return await Authenticate(authRequestDto);
+        }
+        catch (Exception e)
+        {
+            return BadRequest($"Registration failed: {e.Message}");
+        }
+    }
+
 }
