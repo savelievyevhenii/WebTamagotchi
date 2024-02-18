@@ -22,7 +22,7 @@ namespace WebTamagotchi.Identity.Services.Impl
             _logger = logger;
         }
 
-        public string CreateToken(ApplicationUser user)
+        public string CreateToken(User user)
         {
             var expiration = DateTime.UtcNow.AddMinutes(ExpirationMinutes);
             var token = CreateJwtToken(CreateClaims(user), CreateSigningCredentials(), expiration);
@@ -33,7 +33,7 @@ namespace WebTamagotchi.Identity.Services.Impl
             return tokenHandler.WriteToken(token);
         }
 
-        public string GenerateRefreshToken(ApplicationUser user)
+        public string GenerateRefreshToken(User user)
         {
             var randomNumber = new byte[64];
             using var rng = RandomNumberGenerator.Create();
@@ -102,7 +102,7 @@ namespace WebTamagotchi.Identity.Services.Impl
             );
         }
 
-        private IEnumerable<Claim> CreateClaims(ApplicationUser user)
+        private IEnumerable<Claim> CreateClaims(User user)
         {
             var jwtSub = _configuration.GetValue<string>("JwtTokenSettings:JwtRegisteredClaimNamesSub");
 

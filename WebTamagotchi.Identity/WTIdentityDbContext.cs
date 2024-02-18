@@ -7,7 +7,7 @@ using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Identity
 {
-    public class WTIdentityDbContext : IdentityUserContext<ApplicationUser>
+    public class WTIdentityDbContext : IdentityUserContext<User>
     {
         private readonly IConfiguration _configuration;
 
@@ -26,13 +26,13 @@ namespace WebTamagotchi.Identity
 
         private void SeedAdminUser(ModelBuilder modelBuilder)
         {
-            var hasher = new PasswordHasher<ApplicationUser>();
+            var hasher = new PasswordHasher<User>();
 
             var adminEmail = _configuration.GetValue<string>("SiteSettings:AdminEmail");
             var adminPassword = _configuration.GetValue<string>("SiteSettings:AdminPassword");
 
-            modelBuilder.Entity<ApplicationUser>().HasData(
-                new ApplicationUser
+            modelBuilder.Entity<User>().HasData(
+                new User
                 {
                     Id = "80c8b6b1-e2b6-45e8-b044-8f2178a90111", // primary key
                     UserName = "admin",

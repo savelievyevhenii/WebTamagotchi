@@ -8,11 +8,11 @@ namespace WebTamagotchi.Identity.Services.Impl;
 
 public class AuthService : IAuthService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<User> _userManager;
     private readonly WTIdentityDbContext _context;
     private readonly ITokenService _tokenService;
 
-    public AuthService(UserManager<ApplicationUser> userManager, WTIdentityDbContext context,
+    public AuthService(UserManager<User> userManager, WTIdentityDbContext context,
         ITokenService tokenService)
     {
         _userManager = userManager;
@@ -53,7 +53,7 @@ public class AuthService : IAuthService
 
     public async Task<AuthRequest> Register(RegistrationRequest request)
     {
-        var user = new ApplicationUser { UserName = request.Email, Email = request.Email, Role = Role.Player };
+        var user = new User { UserName = request.Email, Email = request.Email, Role = Role.Player };
 
         var result = await _userManager.CreateAsync(user, request.Password!);
 

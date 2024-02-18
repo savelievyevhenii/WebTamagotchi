@@ -5,9 +5,9 @@ namespace WebTamagotchi.Identity.Services;
 
 public interface ITokenService
 {
-    string CreateToken(ApplicationUser user);
+    string CreateToken(User user);
     
-    string GenerateRefreshToken(ApplicationUser foundUser);
+    string GenerateRefreshToken(User foundUser);
     
     ClaimsPrincipal GetPrincipalFromExpiredToken(string? accessToken);
 }
