@@ -6,7 +6,6 @@ using WebTamagotchi.Identity.Services;
 
 namespace WebTamagotchi.Controllers;
 
-
 [ApiController]
 [Route("/api/[controller]")]
 public class AuthController : ControllerBase

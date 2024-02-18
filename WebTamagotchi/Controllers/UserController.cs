@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.Converters.Identity;
 using WebTamagotchi.Dto.Identity;
-using WebTamagotchi.Identity.Enums;
 using WebTamagotchi.Identity.Services;
 
 namespace WebTamagotchi.Controllers;
@@ -17,50 +16,97 @@ public class UserController : ControllerBase
         _userService = userService;
     }
     
-    [HttpGet("users")]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+    [HttpGet("players")]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetPlayers()
     {
         try
         {
-            var users = await _userService.GetUsers();
+            var users = await _userService.GetPlayers();
             var userDtos = users.Select(UserConverter.ToDto).ToList();
 
             return Ok(userDtos);
         }
         catch (Exception e)
         {
-            return BadRequest($"Getting users failed: {e.Message}");
+            return BadRequest($"Getting players failed: {e.Message}");
         }
     }
 
-    [HttpGet("user")]
-    public async Task<ActionResult<UserDto>> GetUser(string email)
+    [HttpGet("player")]
+    public async Task<ActionResult<UserDto>> GetPlayer(string email)
     {
         try
         {
-            var user = await _userService.GetUser(email);
+            var user = await _userService.GetPlayer(email);
             var userDto = UserConverter.ToDto(user);
 
             return Ok(userDto);
         }
         catch (Exception e)
         {
-            return BadRequest($"Getting user failed: {e.Message}");
+            return BadRequest($"Getting player failed: {e.Message}");
         }
     }
 
-    [HttpDelete("user")]
-    public async Task<ActionResult> DeleteUser(string email)
+    [HttpDelete("player")]
+    public async Task<ActionResult> DeletePlayer(string email)
     {
         try
         {
-            await _userService.DeleteUser(email);
+            await _userService.DeletePlayer(email);
 
             return Ok($"User '{email}' deleted");
         }
         catch (Exception e)
         {
-            return BadRequest($"Deleting user failed: {e.Message}");
+            return BadRequest($"Deleting player failed: {e.Message}");
+        }
+    }
+    
+    [HttpGet("admins")]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetAdmins()
+    {
+        try
+        {
+            var users = await _userService.GetAdmins();
+            var userDtos = users.Select(UserConverter.ToDto).ToList();
+
+            return Ok(userDtos);
+        }
+        catch (Exception e)
+        {
+            return BadRequest($"Getting admins failed: {e.Message}");
+        }
+    }
+
+    [HttpGet("admin")]
+    public async Task<ActionResult<UserDto>> GetAdmin(string email)
+    {
+        try
+        {
+            var user = await _userService.GetAdmin(email);
+            var userDto = UserConverter.ToDto(user);
+
+            return Ok(userDto);
+        }
+        catch (Exception e)
+        {
+            return BadRequest($"Getting admin failed: {e.Message}");
+        }
+    }
+
+    [HttpDelete("admin")]
+    public async Task<ActionResult> DeleteAdmin(string email)
+    {
+        try
+        {
+            await _userService.DeleteAdmin(email);
+
+            return Ok($"Admin '{email}' deleted");
+        }
+        catch (Exception e)
+        {
+            return BadRequest($"Deleting admin failed: {e.Message}");
         }
     }
 

@@ -5,11 +5,17 @@ namespace WebTamagotchi.Identity.Services;
 
 public interface IUserService
 {
-    Task<IEnumerable<User>> GetUsers();
+    Task<IEnumerable<User>> GetPlayers();
     
-    Task<User> GetUser(string email);
+    Task<User> GetPlayer(string email);
     
-    Task DeleteUser(string email);
+    Task DeletePlayer(string email);
+    
+    Task<IEnumerable<User>> GetAdmins();
+    
+    Task<User> GetAdmin(string email);
+    
+    Task DeleteAdmin(string email);
     
     Task<User> ChangeRole(string email, Role role);
 }
