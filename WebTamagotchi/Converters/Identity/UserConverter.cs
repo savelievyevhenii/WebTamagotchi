@@ -1,4 +1,5 @@
-﻿using WebTamagotchi.Dto.Identity;
+﻿using CSharpFunctionalExtensions;
+using WebTamagotchi.Dto.Identity;
 using WebTamagotchi.Identity.Enums;
 using WebTamagotchi.Identity.Models;
 

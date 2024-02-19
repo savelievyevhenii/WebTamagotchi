@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Identity;
 using WebTamagotchi.Identity.Enums;
 using WebTamagotchi.Identity.Exceptions;
 using WebTamagotchi.Identity.Models;
@@ -14,57 +15,88 @@ public class UserService : IUserService
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
-    private async Task<User> GetUserByEmailAndRoleAsync(string email, Role role)
+    private async Task<Result<User>> GetUserByEmailAndRoleAsync(string email, Role role)
     {
-        var user = await _userManager.FindByEmailAsync(email)
-                   ?? throw new UserNotFoundException(email);
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)
+        {
+            return Result.Failure<User>(new UserNotFoundException(email).ToString());
+        }
 
         if (user.Role == role)
         {
-            return user;
+            return Result.Success(user);
         }
 
-        var exceptionType = role == Role.Admin
-            ? typeof(UserNotAdminException)
-            : typeof(UserNotPlayerException);
+        var errorMessage = role == Role.Admin
+            ? new UserNotAdminException(email).ToString()
+            : new UserNotPlayerException(email).ToString();
 
-        throw ((Exception)Activator.CreateInstance(exceptionType, email)!)!;
+        return Result.Failure<User>(errorMessage);
     }
 
-    private async Task<IEnumerable<User>> GetUsersByRoleAsync(Role role)
+    private Task<Result<IEnumerable<User>>> GetUsersByRoleAsync(Role role)
     {
-        var users = _userManager.Users?.Where(user => user.Role == role)
-                    ?? throw new Exception("Unable to retrieve users.");
+        var users = _userManager.Users?.Where(user => user.Role == role);
 
-        return await Task.FromResult(users);
+        return Task.FromResult(users == null
+            ? Result.Failure<IEnumerable<User>>("Unable to retrieve users.")
+            : Result.Success<IEnumerable<User>>(users));
     }
 
-    public async Task<IEnumerable<User>> GetPlayers() => await GetUsersByRoleAsync(Role.Player);
+    public async Task<Result<IEnumerable<User>>> GetPlayers() => await GetUsersByRoleAsync(Role.Player);
 
-    public async Task<User> GetPlayer(string email) => await GetUserByEmailAndRoleAsync(email, Role.Player);
+    public async Task<Result<User>> GetPlayer(string email) => await GetUserByEmailAndRoleAsync(email, Role.Player);
 
-    public async Task DeletePlayer(string email) => await _userManager.DeleteAsync(await GetPlayer(email));
-
-    public async Task<IEnumerable<User>> GetAdmins() => await GetUsersByRoleAsync(Role.Admin);
-
-    public async Task<User> GetAdmin(string email) => await GetUserByEmailAndRoleAsync(email, Role.Admin);
-
-    public async Task DeleteAdmin(string email) => await _userManager.DeleteAsync(await GetAdmin(email));
-
-    public async Task<User> ChangeRole(string email, Role role)
+    public async Task<Result> DeletePlayer(string email)
     {
-        var user = await _userManager.FindByEmailAsync(email) ?? throw new UserNotFoundException(email);
-        user.Role = role;
+        var result = await GetPlayer(email);
 
-        var result = await _userManager.UpdateAsync(user);
-
-        if (result.Succeeded)
+        if (!result.IsSuccess)
         {
-            return user;
+            return result;
         }
 
-        var firstErrorDescription = result.Errors.FirstOrDefault()?.Description
-                                    ?? "Changing user role failed.";
-        throw new Exception(firstErrorDescription);
+        return await _userManager.DeleteAsync(result.Value) != null
+            ? Result.Success()
+            : Result.Failure("Deletion failed");
+    }
+
+    public async Task<Result<IEnumerable<User>>> GetAdmins() => await GetUsersByRoleAsync(Role.Admin);
+
+    public async Task<Result<User>> GetAdmin(string email) => await GetUserByEmailAndRoleAsync(email, Role.Admin);
+
+    public async Task<Result> DeleteAdmin(string email)
+    {
+        var result = await GetAdmin(email);
+
+        if (!result.IsSuccess)
+        {
+            return result;
+        }
+
+        return await _userManager.DeleteAsync(result.Value) != null
+            ? Result.Success()
+            : Result.Failure("Deletion failed");
+    }
+
+    public async Task<Result<User>> ChangeRole(string email, Role role)
+    {
+        return await Result.Try(() => _userManager.FindByEmailAsync(email))
+            .Bind(async user =>
+            {
+                if (user == null)
+                    return Result.Failure<User>(new UserNotFoundException(email).ToString());
+
+                user.Role = role;
+
+                var updateResult = await _userManager.UpdateAsync(user);
+
+                return updateResult.Succeeded
+                    ? Result.Success(user)
+                    : Result.Failure<User>(updateResult.Errors.FirstOrDefault()?.Description ??
+                                           "Changing user role failed.");
+            });
     }
 }

@@ -19,111 +19,72 @@ public class UserController : ControllerBase
     [HttpGet("players")]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetPlayers()
     {
-        try
-        {
-            var users = await _userService.GetPlayers();
-            var userDtos = users.Select(UserConverter.ToDto).ToList();
+        var result = await _userService.GetPlayers();
 
-            return Ok(userDtos);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Getting players failed: {e.Message}");
-        }
+        return result.IsSuccess
+            ? Ok(result.Value.Select(UserConverter.ToDto))
+            : BadRequest($"Getting players failed: {result.Error}");
     }
+
 
     [HttpGet("player")]
     public async Task<ActionResult<UserDto>> GetPlayer(string email)
     {
-        try
-        {
-            var user = await _userService.GetPlayer(email);
-            var userDto = UserConverter.ToDto(user);
+        var result = await _userService.GetPlayer(email);
 
-            return Ok(userDto);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Getting player failed: {e.Message}");
-        }
+        return result.IsSuccess
+            ? Ok(UserConverter.ToDto(result.Value))
+            : BadRequest($"Getting player failed: {result.Error}");
     }
 
     [HttpDelete("player")]
     public async Task<ActionResult> DeletePlayer(string email)
     {
-        try
-        {
-            await _userService.DeletePlayer(email);
+        var result = await _userService.DeletePlayer(email);
 
-            return Ok($"User '{email}' deleted");
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Deleting player failed: {e.Message}");
-        }
+        return result.IsSuccess
+            ? Ok($"Player '{email}' deleted")
+            : BadRequest($"Deleting player failed: {result.Error}");
     }
-
+    
     [HttpGet("admins")]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetAdmins()
     {
-        try
-        {
-            var users = await _userService.GetAdmins();
-            var userDtos = users.Select(UserConverter.ToDto).ToList();
+        var result = await _userService.GetAdmins();
 
-            return Ok(userDtos);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Getting admins failed: {e.Message}");
-        }
+        return result.IsSuccess
+            ? Ok(result.Value.Select(UserConverter.ToDto))
+            : BadRequest($"Getting players failed: {result.Error}");
     }
-
+    
     [HttpGet("admin")]
     public async Task<ActionResult<UserDto>> GetAdmin(string email)
     {
-        try
-        {
-            var user = await _userService.GetAdmin(email);
-            var userDto = UserConverter.ToDto(user);
+        var result = await _userService.GetAdmin(email);
 
-            return Ok(userDto);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Getting admin failed: {e.Message}");
-        }
+        return result.IsSuccess
+            ? Ok(UserConverter.ToDto(result.Value))
+            : BadRequest($"Getting admin failed: {result.Error}");
     }
-
+    
     [HttpDelete("admin")]
     public async Task<ActionResult> DeleteAdmin(string email)
     {
-        try
-        {
-            await _userService.DeleteAdmin(email);
+        var result = await _userService.DeleteAdmin(email);
 
-            return Ok($"Admin '{email}' deleted");
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Deleting admin failed: {e.Message}");
-        }
+        return result.IsSuccess
+            ? Ok($"Admin '{email}' deleted")
+            : BadRequest($"Deleting player failed: {result.Error}");
     }
-
+    
     [HttpPost("change-role")]
     public async Task<ActionResult> ChangeRole(string email, RoleDto roleDto)
     {
-        try
-        {
-            var role = RoleConverter.ToModel(roleDto);
-            var user = await _userService.ChangeRole(email, role);
-            var userDto = UserConverter.ToDto(user);
+        var role = RoleConverter.ToModel(roleDto);
+        var result = await _userService.ChangeRole(email, role);
 
-            return Ok(userDto);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Changing user role failed: {e.Message}");
-        }
+        return result.IsSuccess
+            ? Ok(UserConverter.ToDto(result.Value))
+            : BadRequest($"Changing user role failed: {result.Error}");
     }
 }

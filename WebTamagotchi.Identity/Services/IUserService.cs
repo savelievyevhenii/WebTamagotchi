@@ -1,21 +1,22 @@
-﻿using WebTamagotchi.Identity.Enums;
+﻿using CSharpFunctionalExtensions;
+using WebTamagotchi.Identity.Enums;
 using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Identity.Services;
 
 public interface IUserService
 {
-    Task<IEnumerable<User>> GetPlayers();
+    Task<Result<IEnumerable<User>>> GetPlayers();
     
-    Task<User> GetPlayer(string email);
+    Task<Result<User>> GetPlayer(string email);
     
-    Task DeletePlayer(string email);
+    Task<Result> DeletePlayer(string email);
     
-    Task<IEnumerable<User>> GetAdmins();
+    Task<Result<IEnumerable<User>>> GetAdmins();
     
-    Task<User> GetAdmin(string email);
+    Task<Result<User>> GetAdmin(string email);
     
-    Task DeleteAdmin(string email);
+    Task<Result> DeleteAdmin(string email);
     
-    Task<User> ChangeRole(string email, Role role);
+    Task<Result<User>> ChangeRole(string email, Role role);
 }
