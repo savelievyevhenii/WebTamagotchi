@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using WebTamagotchi.Identity.Enums;
 
 namespace WebTamagotchi.Dto.Identity;
 

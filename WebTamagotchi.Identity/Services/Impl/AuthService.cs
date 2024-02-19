@@ -105,7 +105,7 @@ public class AuthService : IAuthService
 
         return new ObjectResult(result);
     }
-    
+
     public async Task Revoke(string username)
     {
         var user = await _userManager.FindByNameAsync(username)

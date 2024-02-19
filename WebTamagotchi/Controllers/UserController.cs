@@ -10,12 +10,12 @@ namespace WebTamagotchi.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-    
+
     public UserController(IUserService userService)
     {
         _userService = userService;
     }
-    
+
     [HttpGet("players")]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetPlayers()
     {
@@ -62,7 +62,7 @@ public class UserController : ControllerBase
             return BadRequest($"Deleting player failed: {e.Message}");
         }
     }
-    
+
     [HttpGet("admins")]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetAdmins()
     {

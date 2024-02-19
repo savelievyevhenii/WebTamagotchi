@@ -16,7 +16,7 @@ public class AuthController : ControllerBase
     {
         _authService = authService;
     }
-    
+
     [Authorize]
     [HttpGet("test-auth")]
     public IActionResult TestAuthorization()
@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
             {
                 return BadRequest(ModelState);
             }
-            
+
             var request = AuthRequestConverter.ToModel(requestDto);
             var response = await _authService.Authenticate(request);
             var responseDto = AuthResponseConverter.ToDto(response);
@@ -49,7 +49,7 @@ public class AuthController : ControllerBase
             return BadRequest($"Authentication failed: {e.Message}");
         }
     }
-    
+
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegistrationRequestDto requestDto)
     {
@@ -59,7 +59,7 @@ public class AuthController : ControllerBase
             {
                 return BadRequest(ModelState);
             }
-            
+
             var request = RegistrationRequestConverter.ToModel(requestDto);
             var authRequest = await _authService.Register(request);
             var authRequestDto = AuthRequestConverter.ToDto(authRequest);
@@ -71,7 +71,7 @@ public class AuthController : ControllerBase
             return BadRequest($"Registration failed: {e.Message}");
         }
     }
-    
+
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModelDto tokenDto)
     {
@@ -85,7 +85,7 @@ public class AuthController : ControllerBase
             return BadRequest($"Refresh token failed: {e.Message}");
         }
     }
-    
+
     [Authorize]
     [HttpPost("revoke/{username}")]
     public async Task<IActionResult> Revoke(string username)
@@ -100,6 +100,7 @@ public class AuthController : ControllerBase
             return BadRequest($"Revoke failed: {e.Message}");
         }
     }
+
     [Authorize]
     [HttpPost("revoke-all")]
     public async Task<IActionResult> RevokeAll()
@@ -114,5 +115,4 @@ public class AuthController : ControllerBase
             return BadRequest($"Revoke failed: {e.Message}");
         }
     }
-    
 }
