@@ -64,7 +64,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtTokenSettings.GetValue<string>("ValidIssuer"),
         ValidAudience = jwtTokenSettings.GetValue<string>("ValidAudience"),
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtTokenSettings.GetValue<string>("SymmetricSecurityKey"))
+            Encoding.UTF8.GetBytes(jwtTokenSettings.GetValue<string>("SymmetricSecurityKey")!)
         ),
     };
 });
