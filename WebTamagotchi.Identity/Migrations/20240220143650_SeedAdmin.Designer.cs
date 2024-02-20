@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebTamagotchi.Identity;
@@ -11,9 +12,11 @@ using WebTamagotchi.Identity;
 namespace WebTamagotchi.Identity.Migrations
 {
     [DbContext(typeof(WTIdentityDbContext))]
-    partial class WTIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240220143650_SeedAdmin")]
+    partial class SeedAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

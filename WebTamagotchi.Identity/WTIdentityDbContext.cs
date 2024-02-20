@@ -21,28 +21,27 @@ namespace WebTamagotchi.Identity
         {
             base.OnModelCreating(modelBuilder);
 
-            // SeedAdminUser(modelBuilder);
+            SeedAdminUser(modelBuilder);
         }
 
         private void SeedAdminUser(ModelBuilder modelBuilder)
         {
+            const string adminEmail = "admin@webtamagotchi.com";
+            const string adminPassword = "admin1admin";
+            
             var hasher = new PasswordHasher<User>();
-
-            var adminEmail = _configuration.GetValue<string>("SiteSettings:AdminEmail");
-            var adminPassword = _configuration.GetValue<string>("SiteSettings:AdminPassword");
-
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = "80c8b6b1-e2b6-45e8-b044-8f2178a90111", // primary key
-                    UserName = "admin",
-                    NormalizedUserName = adminEmail.ToUpper(),
-                    PasswordHash = hasher.HashPassword(null, adminPassword),
-                    Email = adminEmail,
-                    NormalizedEmail = adminEmail.ToUpper(),
-                    Role = Role.Admin
-                }
-            );
+            var adminUser = new User
+            {
+                Id = "80c8b6b1-e2b6-45e8-b044-8f2178a90111", // primary key
+                UserName = adminEmail,
+                NormalizedUserName = adminEmail!.ToUpper(),
+                Email = adminEmail,
+                NormalizedEmail = adminEmail.ToUpper(),
+                Role = Role.Admin
+            };
+            adminUser.PasswordHash = hasher.HashPassword(adminUser, adminPassword!);    
+            
+            modelBuilder.Entity<User>().HasData(adminUser);
         }
     }
 }
