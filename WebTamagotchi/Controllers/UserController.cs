@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.Converters.Identity;
 using WebTamagotchi.Dto.Identity;
 using WebTamagotchi.Identity.Services;
 
 namespace WebTamagotchi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/[controller]")]
 public class UserController : ControllerBase

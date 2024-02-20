@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.Converters.Identity;
 using WebTamagotchi.Dto.Identity;
@@ -6,6 +7,7 @@ using WebTamagotchi.Identity.Services;
 
 namespace WebTamagotchi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/[controller]")]
 public class AuthController : ControllerBase
@@ -17,102 +19,67 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [Authorize]
     [HttpGet("test-auth")]
     public IActionResult TestAuthorization()
     {
         return Ok("You're Authorized");
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponseDto>> Authenticate([FromBody] AuthRequestDto requestDto)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        var request = AuthRequestConverter.ToModel(requestDto);
+        var result = await _authService.Authenticate(request);
 
-            var request = AuthRequestConverter.ToModel(requestDto);
-            var response = await _authService.Authenticate(request);
-            var responseDto = AuthResponseConverter.ToDto(response);
-
-            return Ok(responseDto);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized();
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Authentication failed: {e.Message}");
-        }
+        return result.IsSuccess
+            ? Ok(AuthResponseConverter.ToDto(result.Value))
+            : result.Error is UnauthorizedAccessException
+                ? Unauthorized()
+                : BadRequest($"Authentication failed: {result.Error}");
     }
 
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegistrationRequestDto requestDto)
     {
-        try
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        var request = RegistrationRequestConverter.ToModel(requestDto);
+        var result = await _authService.Register(request);
 
-            var request = RegistrationRequestConverter.ToModel(requestDto);
-            var authRequest = await _authService.Register(request);
-            var authRequestDto = AuthRequestConverter.ToDto(authRequest);
-
-            return await Authenticate(authRequestDto);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Registration failed: {e.Message}");
-        }
+        return result.IsSuccess
+            ? await Authenticate(AuthRequestConverter.ToDto(result.Value))
+            : BadRequest($"Registration failed: {result.Error}");
     }
 
+    [AllowAnonymous]
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModelDto tokenDto)
     {
-        try
-        {
-            var tokenModel = TokenModelConverter.ToModel(tokenDto);
-            return await _authService.RefreshToken(tokenModel);
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Refresh token failed: {e.Message}");
-        }
+        var tokenModel = TokenModelConverter.ToModel(tokenDto);
+        var result = await _authService.RefreshToken(tokenModel);
+
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : BadRequest($"Refresh token failed: {result.Error}");
     }
 
-    [Authorize]
     [HttpPost("revoke/{username}")]
     public async Task<IActionResult> Revoke(string username)
     {
-        try
-        {
-            await _authService.Revoke(username);
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Revoke failed: {e.Message}");
-        }
+        var result = await _authService.Revoke(username);
+
+        return result.IsSuccess
+            ? Ok($"User {username} revoked")
+            : BadRequest($"Revoke failed: {result.Error}");
     }
 
-    [Authorize]
     [HttpPost("revoke-all")]
     public async Task<IActionResult> RevokeAll()
     {
-        try
-        {
-            await _authService.RevokeAll();
-            return Ok();
-        }
-        catch (Exception e)
-        {
-            return BadRequest($"Revoke failed: {e.Message}");
-        }
+        var result = await _authService.RevokeAll();
+
+        return result.IsSuccess
+            ? Ok($"All users revoked")
+            : BadRequest($"Revoke failed: {result.Error}");
     }
 }

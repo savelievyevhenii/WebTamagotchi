@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.Identity.Enums;
 using WebTamagotchi.Identity.Exceptions;
@@ -20,21 +21,23 @@ public class AuthService : IAuthService
         _tokenService = tokenService;
     }
 
-    public async Task<AuthResponse> Authenticate(AuthRequest request)
+    public async Task<Result<AuthResponse>> Authenticate(AuthRequest request)
     {
-        var managedUser = await _userManager.FindByEmailAsync(request.Email!) ??
-                          throw new UserNotFoundException(request.Email!);
+        var managedUser = await _userManager.FindByEmailAsync(request.Email!);
+        if (managedUser == null)
+        {
+            return Result.Failure<AuthResponse>(new UserNotFoundException(request.Email!).ToString());
+        }
 
         if (!await _userManager.CheckPasswordAsync(managedUser, request.Password!))
         {
-            throw new PasswordValidationException();
+            return Result.Failure<AuthResponse>(new PasswordValidationException().ToString());
         }
 
         var foundUser = _context.Users.FirstOrDefault(u => u.Email == request.Email);
-
-        if (foundUser is null)
+        if (foundUser == null)
         {
-            throw new UnauthorizedAccessException();
+            return Result.Failure<AuthResponse>(new UnauthorizedAccessException().ToString());
         }
 
         var accessToken = _tokenService.CreateToken(foundUser);
@@ -42,50 +45,43 @@ public class AuthService : IAuthService
 
         await _context.SaveChangesAsync();
 
-        return new AuthResponse
+        return Result.Success(new AuthResponse
         {
             Username = foundUser.UserName,
             Email = foundUser.Email!,
             Token = accessToken,
             RefreshToken = refreshToken
-        };
+        });
     }
 
-    public async Task<AuthRequest> Register(RegistrationRequest request)
+    public async Task<Result<AuthRequest>> Register(RegistrationRequest request)
     {
         var user = new User { UserName = request.Email, Email = request.Email, Role = Role.Player };
 
         var result = await _userManager.CreateAsync(user, request.Password!);
 
-        if (result.Succeeded)
-        {
-            return new AuthRequest
-            {
-                Email = request.Email,
-                Password = request.Password
-            };
-        }
-
-        var firstErrorDescription = result.Errors.FirstOrDefault()?.Description ?? "Registration failed.";
-        throw new Exception(firstErrorDescription);
+        return result.Succeeded
+            ? Result.Success(new AuthRequest { Email = request.Email, Password = request.Password })
+            : Result.Failure<AuthRequest>(result.Errors.FirstOrDefault()?.Description ?? "Registration failed.");
     }
 
-    public async Task<IActionResult> RefreshToken(TokenModel? tokenModel)
+    public async Task<Result<IActionResult>> RefreshToken(TokenModel tokenModel)
     {
-        if (tokenModel is null)
-        {
-            throw new InvalidClientRequestException();
-        }
-
         var accessToken = tokenModel.AccessToken;
         var refreshToken = tokenModel.RefreshToken;
 
-        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken)
-                        ?? throw new InvalidTokenException();
+        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
 
-        var user = await _userManager.FindByNameAsync(principal.Identity!.Name!)
-                   ?? throw new InvalidTokenException();
+        var userResult = await _userManager.FindByNameAsync(principal?.Identity?.Name!) ??
+                         Result.Failure<User>(new InvalidTokenException().ToString());
 
+        return userResult.IsSuccess
+            ? Result.Success(ValidateAndUpdateTokens(userResult.Value, refreshToken!))
+            : Result.Failure<IActionResult>(new InvalidTokenException().ToString());
+    }
+
+    private IActionResult ValidateAndUpdateTokens(User user, string refreshToken)
+    {
         if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
             throw new InvalidTokenException();
@@ -95,7 +91,7 @@ public class AuthService : IAuthService
         var newRefreshToken = _tokenService.GenerateRefreshToken(user);
 
         user.RefreshToken = newRefreshToken;
-        await _userManager.UpdateAsync(user);
+        _userManager.UpdateAsync(user).GetAwaiter().GetResult();
 
         var result = new
         {
@@ -106,22 +102,33 @@ public class AuthService : IAuthService
         return new ObjectResult(result);
     }
 
-    public async Task Revoke(string username)
+    public async Task<Result> Revoke(string username)
     {
-        var user = await _userManager.FindByNameAsync(username)
-                   ?? throw new UserNotFoundException(username);
+        var userResult = await _userManager.FindByNameAsync(username) ??
+                         Result.Failure<User>(new UserNotFoundException(username).ToString());
 
-        user.RefreshToken = null;
-        await _userManager.UpdateAsync(user);
+        return userResult.IsSuccess
+            ? await RevokeRefreshToken(userResult.Value)
+            : Result.Failure(new UserNotFoundException(username).ToString());
     }
-
-    public async Task RevokeAll()
+    
+    public async Task<Result> RevokeAll()
     {
         var users = _userManager.Users.ToList();
+
         foreach (var user in users)
-        {
-            user.RefreshToken = null;
-            await _userManager.UpdateAsync(user);
+        { 
+            await RevokeRefreshToken(user);
         }
+
+        return Result.Success();
+    }
+    
+    private async Task<Result> RevokeRefreshToken(User user)
+    {
+        user.RefreshToken = null;
+        _userManager.UpdateAsync(user).GetAwaiter().GetResult();
+
+        return Result.Success();
     }
 }
