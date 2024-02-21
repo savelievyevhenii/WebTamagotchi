@@ -32,7 +32,7 @@ namespace WebTamagotchi.Identity
             var hasher = new PasswordHasher<User>();
             var adminUser = new User
             {
-                Id = "80c8b6b1-e2b6-45e8-b044-8f2178a90111", // primary key
+                Id = "80c8b6b1-e2b6-45e8-b044-8f2178a90111",
                 UserName = adminEmail,
                 NormalizedUserName = adminEmail!.ToUpper(),
                 Email = adminEmail,
