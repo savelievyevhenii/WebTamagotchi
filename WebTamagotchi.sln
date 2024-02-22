@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi", "WebTamagot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi.Identity", "WebTamagotchi.Identity\WebTamagotchi.Identity.csproj", "{B5631834-7EFE-41CD-819B-692E223787A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi.GameLogic", "WebTamagotchi.GameLogic\WebTamagotchi.GameLogic.csproj", "{F6AB8A64-EE9E-4114-ACD8-62C2A579A879}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{B5631834-7EFE-41CD-819B-692E223787A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5631834-7EFE-41CD-819B-692E223787A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5631834-7EFE-41CD-819B-692E223787A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6AB8A64-EE9E-4114-ACD8-62C2A579A879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6AB8A64-EE9E-4114-ACD8-62C2A579A879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6AB8A64-EE9E-4114-ACD8-62C2A579A879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AB8A64-EE9E-4114-ACD8-62C2A579A879}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

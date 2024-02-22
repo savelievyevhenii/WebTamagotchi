@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\WebTamagotchi.GameLogic\WebTamagotchi.GameLogic.csproj" />
       <ProjectReference Include="..\WebTamagotchi.Identity\WebTamagotchi.Identity.csproj" />
     </ItemGroup>
 
