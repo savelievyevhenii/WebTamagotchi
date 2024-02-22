@@ -7,6 +7,4 @@ public class Food: Activities
     public int Satiety { get; set; }
 
     public int Dirtiness { get; set; }
-    
-    public string IconJson { get; set; } = null!;
 }

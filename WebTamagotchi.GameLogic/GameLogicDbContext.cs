@@ -6,13 +6,13 @@ namespace WebTamagotchi.GameLogic;
 public class GameLogicDbContext : DbContext
 {
     public DbSet<Pet> Pets { get; set; }
-    
+
     public DbSet<Game> Games { get; set; }
-    
+
     public DbSet<Food> Foods { get; set; }
-    
+
     public DbSet<Bedroom> Bedrooms { get; set; }
-    
+
     public DbSet<Bathroom> Bathrooms { get; set; }
 
     public GameLogicDbContext(DbContextOptions<GameLogicDbContext> options) : base(options)
@@ -38,9 +38,8 @@ public class GameLogicDbContext : DbContext
             Experience = 10,
             Satiety = 10,
             Dirtiness = 6,
-            IconJson = "icon"
         };
-        
+
         var soup = new Food
         {
             Id = Guid.NewGuid().ToString(),
@@ -48,7 +47,6 @@ public class GameLogicDbContext : DbContext
             Experience = 20,
             Satiety = 26,
             Dirtiness = 12,
-            IconJson = "icon"
         };
 
         modelBuilder.Entity<Food>().HasData(apple);
@@ -67,7 +65,7 @@ public class GameLogicDbContext : DbContext
             Dirtiness = 10,
             Tiredness = 20
         };
-    
+
         modelBuilder.Entity<Game>().HasData(game);
     }
 
@@ -80,10 +78,10 @@ public class GameLogicDbContext : DbContext
             Experience = 20,
             Energy = 20
         };
-        
+
         modelBuilder.Entity<Bedroom>().HasData(standardBedroom);
     }
-    
+
     private static void SeedBathrooms(ModelBuilder modelBuilder)
     {
         var standardBathroom = new Bathroom
@@ -93,7 +91,7 @@ public class GameLogicDbContext : DbContext
             Experience = 20,
             Cleanliness = 20
         };
-        
+
         modelBuilder.Entity<Bathroom>().HasData(standardBathroom);
     }
 }
