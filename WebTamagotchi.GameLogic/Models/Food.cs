@@ -2,7 +2,7 @@
 
 namespace WebTamagotchi.GameLogic.Models;
 
-public class Food: Activities
+public class Food: IActivities
 {
     public int Satiety { get; set; }
 

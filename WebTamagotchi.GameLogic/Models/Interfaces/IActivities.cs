@@ -2,7 +2,7 @@
 
 namespace WebTamagotchi.GameLogic.Models.Interfaces;
 
-public class Activities
+public class IActivities
 {
     [Key]
     public int Id { get; set; }

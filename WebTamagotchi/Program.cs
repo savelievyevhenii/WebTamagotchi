@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using WebTamagotchi.GameLogic;
 using WebTamagotchi.Identity;
 using WebTamagotchi.Identity.Models;
 using WebTamagotchi.Identity.Services;
@@ -14,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add DB Contexts
 builder.Services.AddDbContext<WTIdentityDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
+builder.Services.AddDbContext<GameLogicDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
 
 // Services

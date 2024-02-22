@@ -2,7 +2,7 @@
 
 namespace WebTamagotchi.GameLogic.Models;
 
-public class Bedroom : Activities
+public class Bedroom : IActivities
 {
     public int Energy { get; set; }
 }
