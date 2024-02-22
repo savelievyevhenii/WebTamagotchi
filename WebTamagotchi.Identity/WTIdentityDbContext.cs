@@ -24,7 +24,7 @@ namespace WebTamagotchi.Identity
             SeedAdminUser(modelBuilder);
         }
 
-        private void SeedAdminUser(ModelBuilder modelBuilder)
+        private static void SeedAdminUser(ModelBuilder modelBuilder)
         {
             const string adminEmail = "admin@webtamagotchi.com";
             const string adminPassword = "admin1admin";
