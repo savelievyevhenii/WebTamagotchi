@@ -5,7 +5,7 @@ using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Converters.Identity;
 
-public class UserConverter
+public static class UserConverter
 {
     public static UserDto ToDto(User user) =>
         new UserDto

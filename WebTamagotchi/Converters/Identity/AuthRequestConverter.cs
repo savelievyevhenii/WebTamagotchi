@@ -3,7 +3,7 @@ using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Converters.Identity;
 
-public class AuthRequestConverter
+public static class AuthRequestConverter
 {
     public static AuthRequestDto ToDto(AuthRequest request) => new AuthRequestDto
         { Email = request.Email, Password = request.Password };

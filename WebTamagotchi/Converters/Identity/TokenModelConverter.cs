@@ -3,7 +3,7 @@ using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Converters.Identity;
 
-public class TokenModelConverter
+public static class TokenModelConverter
 {
     public static TokenModelDto ToDto(TokenModel model) =>
         new TokenModelDto

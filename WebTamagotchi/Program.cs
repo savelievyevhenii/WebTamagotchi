@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebTamagotchi.GameLogic;
+using WebTamagotchi.GameLogic.Services;
+using WebTamagotchi.GameLogic.Services.Impl;
 using WebTamagotchi.Identity;
 using WebTamagotchi.Identity.Models;
 using WebTamagotchi.Identity.Services;
@@ -23,6 +25,7 @@ builder.Services.AddDbContext<GameLogicDbContext>(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
