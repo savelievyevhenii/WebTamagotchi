@@ -18,7 +18,27 @@ public class GameController : ControllerBase
         _gameService = gameService;
     }
     
-    [HttpPost("create")]
+    [HttpGet]
+    public async Task<IActionResult> GetGame(string name)
+    {
+        var result = await _gameService.Get(name);
+
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : BadRequest(result.Error);
+    }
+    
+    [HttpGet("list")]
+    public async Task<IActionResult> GetGames()
+    {
+        var result = await _gameService.GetAll();
+
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : BadRequest(result.Error);
+    }
+    
+    [HttpPost]
     public async Task<IActionResult> CreateGame([FromBody] GameDto gameDto)
     {
         var result = await _gameService.Create(GameConverter.ToModel(gameDto));

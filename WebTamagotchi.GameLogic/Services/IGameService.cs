@@ -5,9 +5,9 @@ namespace WebTamagotchi.GameLogic.Services;
 
 public interface IGameService
 {
-    Task<Result<Game>> Get();
+    Task<Result<Game>> Get(string name);
 
-    Task<Result<IEnumerable<Game>>> GetAll();
+    Task<Result<List<Game>>> GetAll();
     
     Task<Result<Game>> Create(Game game);
 
