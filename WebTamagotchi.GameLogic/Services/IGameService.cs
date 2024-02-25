@@ -11,5 +11,5 @@ public interface IGameService
     
     Task<Result<Game>> Create(Game game);
 
-    Task<Result<Game>> Update(Game game);
+    Task<Result<Game>> Update(Game game, string id);
 }

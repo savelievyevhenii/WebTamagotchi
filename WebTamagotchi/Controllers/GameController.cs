@@ -47,4 +47,14 @@ public class GameController : ControllerBase
             ? Ok(result.Value)
             : BadRequest(result.Error);
     }
+    
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateGame([FromBody] GameDto gameDto, string id)
+    {
+        var result = await _gameService.Update(GameConverter.ToModel(gameDto), id);
+
+        return result.IsSuccess
+            ? Ok(result.Value)
+            : BadRequest(result.Error);
+    }
 }

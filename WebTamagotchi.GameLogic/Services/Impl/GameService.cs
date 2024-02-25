@@ -61,8 +61,31 @@ public class GameService : IGameService
         }
     }
 
-    public Task<Result<Game>> Update(Game game)
+    public async Task<Result<Game>> Update(Game updatedGame, string id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var existingGame = await _context.Games.FindAsync(id);
+
+            if (existingGame == null)
+            {
+                return Result.Failure<Game>($"Game with id '{id}' not found.");
+            }
+
+            existingGame.Name = updatedGame.Name;
+            existingGame.Fun = updatedGame.Fun;
+            existingGame.Hunger = updatedGame.Hunger;
+            existingGame.Dirtiness = updatedGame.Dirtiness;
+            existingGame.Tiredness = updatedGame.Tiredness;
+            existingGame.Experience = updatedGame.Experience;
+
+            await _context.SaveChangesAsync();
+
+            return Result.Success(existingGame);
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure<Game>($"Failed to update game. Error: {ex.Message}");
+        }
     }
 }
