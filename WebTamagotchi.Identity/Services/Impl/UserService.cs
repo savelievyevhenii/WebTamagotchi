@@ -15,6 +15,14 @@ public class UserService : IUserService
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
+    public async Task<Result<IEnumerable<User>>> GetPlayers() => await GetUsersByRoleAsync(Role.Player);
+
+    public async Task<Result<IEnumerable<User>>> GetAdmins() => await GetUsersByRoleAsync(Role.Admin);
+
+    public async Task<Result<User>> GetPlayer(string email) => await GetUserByEmailAndRoleAsync(email, Role.Player);
+
+    public async Task<Result<User>> GetAdmin(string email) => await GetUserByEmailAndRoleAsync(email, Role.Admin);
+
     private async Task<Result<User>> GetUserByEmailAndRoleAsync(string email, Role role)
     {
         var user = await _userManager.FindByEmailAsync(email);
@@ -45,10 +53,6 @@ public class UserService : IUserService
             : Result.Success<IEnumerable<User>>(users));
     }
 
-    public async Task<Result<IEnumerable<User>>> GetPlayers() => await GetUsersByRoleAsync(Role.Player);
-
-    public async Task<Result<User>> GetPlayer(string email) => await GetUserByEmailAndRoleAsync(email, Role.Player);
-
     public async Task<Result> DeletePlayer(string email)
     {
         var result = await GetPlayer(email);
@@ -62,10 +66,6 @@ public class UserService : IUserService
             ? Result.Success()
             : Result.Failure("Deletion failed");
     }
-
-    public async Task<Result<IEnumerable<User>>> GetAdmins() => await GetUsersByRoleAsync(Role.Admin);
-
-    public async Task<Result<User>> GetAdmin(string email) => await GetUserByEmailAndRoleAsync(email, Role.Admin);
 
     public async Task<Result> DeleteAdmin(string email)
     {
