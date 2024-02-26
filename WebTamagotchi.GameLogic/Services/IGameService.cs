@@ -12,4 +12,6 @@ public interface IGameService
     Task<Result<Game>> Create(Game game);
 
     Task<Result<Game>> Update(Game game, string id);
+    
+    Task<Result> Delete(string name);
 }

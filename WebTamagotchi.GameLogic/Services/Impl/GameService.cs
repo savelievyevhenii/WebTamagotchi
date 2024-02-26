@@ -17,7 +17,7 @@ public class GameService : IGameService
     {
         try
         {
-            var game = await _context.Games.FirstOrDefaultAsync(g => g.Name == name.ToUpper());
+            var game = await _context.Games.FirstOrDefaultAsync(g => g.Name.ToUpper().Equals(name.ToUpper()));
             return game != null
                 ? Result.Success(game)
                 : Result.Failure<Game>($"Game with name '{name}' not found.");
@@ -48,7 +48,6 @@ public class GameService : IGameService
         try
         {
             game.Id = Guid.NewGuid().ToString();
-            game.Name = game.Name.ToUpper();
             _context.Games.Add(game);
 
             await _context.SaveChangesAsync();
@@ -86,6 +85,28 @@ public class GameService : IGameService
         catch (Exception ex)
         {
             return Result.Failure<Game>($"Failed to update game. Error: {ex.Message}");
+        }
+    }
+
+    public async Task<Result> Delete(string name)
+    {
+        try
+        {
+            var gameToDelete = await _context.Games.FirstOrDefaultAsync(g => g.Name.ToUpper().Equals(name.ToUpper()));
+
+            if (gameToDelete == null)
+            {
+                return Result.Failure($"Game with name '{name}' not found.");
+            }
+
+            _context.Games.Remove(gameToDelete);
+            await _context.SaveChangesAsync();
+
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure($"Failed to delete game. Error: {ex.Message}");
         }
     }
 }

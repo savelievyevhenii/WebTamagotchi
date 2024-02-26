@@ -57,4 +57,14 @@ public class GameController : ControllerBase
             ? Ok(result.Value)
             : BadRequest(result.Error);
     }
+    
+    [HttpDelete]
+    public async Task<IActionResult> DeleteGame(string name)
+    {
+        var result = await _gameService.Delete(name);
+
+        return result.IsSuccess
+            ? Ok($"Game '{name}' was deleted.")
+            : BadRequest(result.Error);
+    }
 }
