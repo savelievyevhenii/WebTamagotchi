@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponseDto>> Authenticate([FromBody] AuthRequestDto requestDto)
+    public async Task<IActionResult> Authenticate([FromBody] AuthRequestDto requestDto)
     {
         var request = AuthRequestConverter.ToModel(requestDto);
         var result = await _authService.Authenticate(request);
@@ -40,7 +40,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegistrationRequestDto requestDto)
+    public async Task<IActionResult> Register([FromBody] RegistrationRequestDto requestDto)
     {
         var request = RegistrationRequestConverter.ToModel(requestDto);
         var result = await _authService.Register(request);

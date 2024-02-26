@@ -19,28 +19,28 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("players")]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetPlayers()
+    public async Task<IActionResult> GetPlayers()
     {
         var result = await _userService.GetPlayers();
 
         return result.IsSuccess
-            ? Ok(result.Value.Select(UserConverter.ToDto))
+            ? Ok(result.Value)
             : BadRequest($"Getting players failed: {result.Error}");
     }
 
 
     [HttpGet("player")]
-    public async Task<ActionResult<UserDto>> GetPlayer(string email)
+    public async Task<IActionResult> GetPlayer(string email)
     {
         var result = await _userService.GetPlayer(email);
 
         return result.IsSuccess
-            ? Ok(UserConverter.ToDto(result.Value))
+            ? Ok(result.Value)
             : BadRequest($"Getting player failed: {result.Error}");
     }
 
     [HttpDelete("player")]
-    public async Task<ActionResult> DeletePlayer(string email)
+    public async Task<IActionResult> DeletePlayer(string email)
     {
         var result = await _userService.DeletePlayer(email);
 
@@ -50,27 +50,27 @@ public class UserController : ControllerBase
     }
     
     [HttpGet("admins")]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetAdmins()
+    public async Task<IActionResult> GetAdmins()
     {
         var result = await _userService.GetAdmins();
 
         return result.IsSuccess
-            ? Ok(result.Value.Select(UserConverter.ToDto))
+            ? Ok(result.Value)
             : BadRequest($"Getting players failed: {result.Error}");
     }
     
     [HttpGet("admin")]
-    public async Task<ActionResult<UserDto>> GetAdmin(string email)
+    public async Task<IActionResult> GetAdmin(string email)
     {
         var result = await _userService.GetAdmin(email);
 
         return result.IsSuccess
-            ? Ok(UserConverter.ToDto(result.Value))
+            ? Ok(result.Value)
             : BadRequest($"Getting admin failed: {result.Error}");
     }
     
     [HttpDelete("admin")]
-    public async Task<ActionResult> DeleteAdmin(string email)
+    public async Task<IActionResult> DeleteAdmin(string email)
     {
         var result = await _userService.DeleteAdmin(email);
 
@@ -80,7 +80,7 @@ public class UserController : ControllerBase
     }
     
     [HttpPost("change-role")]
-    public async Task<ActionResult> ChangeRole(string email, RoleDto roleDto)
+    public async Task<IActionResult> ChangeRole(string email, RoleDto roleDto)
     {
         var role = RoleConverter.ToModel(roleDto);
         var result = await _userService.ChangeRole(email, role);
