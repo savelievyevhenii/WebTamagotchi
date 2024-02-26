@@ -23,6 +23,11 @@ public class GameLogicDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<Game>(entity => { entity.HasIndex(x => x.Name).IsUnique(); });
+        modelBuilder.Entity<Food>(entity => { entity.HasIndex(x => x.Name).IsUnique(); });
+        modelBuilder.Entity<Bedroom>(entity => { entity.HasIndex(x => x.Name).IsUnique(); });
+        modelBuilder.Entity<Bathroom>(entity => { entity.HasIndex(x => x.Name).IsUnique(); });
+
         SeedFood(modelBuilder);
         SeedGames(modelBuilder);
         SeedBedrooms(modelBuilder);
