@@ -10,7 +10,7 @@ public interface IAuthService
 
     Task<Result<AuthRequest>> Register(RegistrationRequest request);
 
-    Task<Result<IActionResult>> RefreshToken(TokenModel tokenModel);
+    Task<Result<TokenModel>> RefreshToken(TokenModel tokenModel);
 
     Task<Result> Revoke(string username);
 

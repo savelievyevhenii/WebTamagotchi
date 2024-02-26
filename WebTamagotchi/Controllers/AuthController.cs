@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
         var result = await _authService.Authenticate(request);
 
         return result.IsSuccess
-            ? Ok(AuthResponseConverter.ToDto(result.Value))
+            ? Ok(result.Value)
             : result.Error is UnauthorizedAccessException
                 ? Unauthorized()
                 : BadRequest($"Authentication failed: {result.Error}");

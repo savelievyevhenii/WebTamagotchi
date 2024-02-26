@@ -65,22 +65,19 @@ public class AuthService : IAuthService
             : Result.Failure<AuthRequest>(result.Errors.FirstOrDefault()?.Description ?? "Registration failed.");
     }
 
-    public async Task<Result<IActionResult>> RefreshToken(TokenModel tokenModel)
+    public async Task<Result<TokenModel>> RefreshToken(TokenModel tokenModel)
     {
-        var accessToken = tokenModel.AccessToken;
-        var refreshToken = tokenModel.RefreshToken;
-
-        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+        var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken);
 
         var userResult = await _userManager.FindByNameAsync(principal?.Identity?.Name!) ??
                          Result.Failure<User>(new InvalidTokenException().ToString());
 
         return userResult.IsSuccess
-            ? Result.Success(ValidateAndUpdateTokens(userResult.Value, refreshToken!))
-            : Result.Failure<IActionResult>(new InvalidTokenException().ToString());
+            ? Result.Success(ValidateAndUpdateTokens(userResult.Value, tokenModel.RefreshToken!))
+            : Result.Failure<TokenModel>(new InvalidTokenException().ToString());
     }
 
-    private IActionResult ValidateAndUpdateTokens(User user, string refreshToken)
+    private TokenModel ValidateAndUpdateTokens(User user, string refreshToken)
     {
         if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
@@ -93,13 +90,13 @@ public class AuthService : IAuthService
         user.RefreshToken = newRefreshToken;
         _userManager.UpdateAsync(user).GetAwaiter().GetResult();
 
-        var result = new
+        var result = new TokenModel
         {
-            accessToken = newAccessToken,
-            refreshToken = newRefreshToken
+            AccessToken = newAccessToken,
+            RefreshToken = newRefreshToken
         };
 
-        return new ObjectResult(result);
+        return result;
     }
 
     public async Task<Result> Revoke(string username)
