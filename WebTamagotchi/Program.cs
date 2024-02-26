@@ -28,6 +28,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IFoodService, FoodService>();
 builder.Services.AddScoped<IBedroomService, BedroomService>();
+builder.Services.AddScoped<IBathroomService, BathroomService>();
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);

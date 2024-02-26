@@ -39,7 +39,7 @@ public class FoodController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateGame([FromBody] FoodDto foodDto)
+    public async Task<IActionResult> CreateFood([FromBody] FoodDto foodDto)
     {
         var result = await _foodService.Create(FoodConverter.ToModel(foodDto));
 
@@ -49,7 +49,7 @@ public class FoodController : ControllerBase
     }
     
     [HttpPost("update")]
-    public async Task<IActionResult> UpdateGame([FromBody] FoodDto foodDto, string id)
+    public async Task<IActionResult> UpdateFood([FromBody] FoodDto foodDto, string id)
     {
         var result = await _foodService.Update(FoodConverter.ToModel(foodDto), id);
 
@@ -59,7 +59,7 @@ public class FoodController : ControllerBase
     }
     
     [HttpDelete]
-    public async Task<IActionResult> DeleteGame(string name)
+    public async Task<IActionResult> DeleteFood(string name)
     {
         var result = await _foodService.Delete(name);
 

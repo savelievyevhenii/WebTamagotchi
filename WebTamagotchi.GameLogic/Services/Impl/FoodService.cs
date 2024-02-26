@@ -90,7 +90,7 @@ public class FoodService : IFoodService
     {
         try
         {
-            var foodToDelete = await _context.Foods.FirstOrDefaultAsync(g => g.Name.ToUpper().Equals(name.ToUpper()));
+            var foodToDelete = await _context.Foods.FirstOrDefaultAsync(f => f.Name.ToUpper().Equals(name.ToUpper()));
 
             if (foodToDelete == null)
             {

@@ -17,7 +17,7 @@ public class BedroomService : IBedroomService
     {
         try
         {
-            var bedroom = await _context.Bedrooms.FirstOrDefaultAsync(f => f.Name.ToUpper().Equals(name.ToUpper()));
+            var bedroom = await _context.Bedrooms.FirstOrDefaultAsync(b => b.Name.ToUpper().Equals(name.ToUpper()));
             return bedroom != null
                 ? Result.Success(bedroom)
                 : Result.Failure<Bedroom>($"Bedroom with name '{name}' not found.");
@@ -89,7 +89,7 @@ public class BedroomService : IBedroomService
     {
         try
         {
-            var bedroomToDelete = await _context.Bedrooms.FirstOrDefaultAsync(g => g.Name.ToUpper().Equals(name.ToUpper()));
+            var bedroomToDelete = await _context.Bedrooms.FirstOrDefaultAsync(b => b.Name.ToUpper().Equals(name.ToUpper()));
 
             if (bedroomToDelete == null)
             {
