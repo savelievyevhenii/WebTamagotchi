@@ -1,14 +1,20 @@
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using CSharpFunctionalExtensions;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using WebTamagotchi.GameLogic;
-using WebTamagotchi.GameLogic.Services;
-using WebTamagotchi.GameLogic.Services.Impl;
-using WebTamagotchi.Identity;
+using WebTamagotchi.ApplicationServices.Commands.IdentityCommands;
+using WebTamagotchi.ApplicationServices.Handlers.IdentityHandlers;
+using WebTamagotchi.Dal;
+using WebTamagotchi.Dal.Repositories;
+using WebTamagotchi.Dal.Repositories.Interfaces;
+using WebTamagotchi.Identity.Errors;
+using WebTamagotchi.Identity.Infrastructure.TokenManager;
 using WebTamagotchi.Identity.Models;
 using WebTamagotchi.Identity.Services;
 using WebTamagotchi.Identity.Services.Impl;
@@ -16,22 +22,16 @@ using WebTamagotchi.Identity.Services.Impl;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add DB Contexts
-builder.Services.AddDbContext<WTIdentityDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
-builder.Services.AddDbContext<GameLogicDbContext>(options =>
+builder.Services.AddDbContext<WebTamagotchiDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("ConnectionString")));
 
 // Services
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IGameService, GameService>();
-builder.Services.AddScoped<IFoodService, FoodService>();
-builder.Services.AddScoped<IBedroomService, BedroomService>();
-builder.Services.AddScoped<IBathroomService, BathroomService>();
+builder.Services.AddScoped<ITokenManager, TokenManager>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<AuthHandler>());
 
 // Controllers
 builder.Services.AddControllers()
@@ -50,7 +50,7 @@ builder.Services
         options.Password.RequireUppercase = false;
     })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<WTIdentityDbContext>();
+    .AddEntityFrameworkStores<WebTamagotchiDbContext>();
 
 // Jwt Authentication
 var jwtTokenSettings = builder.Configuration.GetSection("JwtTokenSettings");

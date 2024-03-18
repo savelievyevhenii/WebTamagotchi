@@ -8,8 +8,4 @@
         <RootNamespace>WebTamagotchi.GameLogic</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\WebTamagotchi.Identity\WebTamagotchi.Identity.csproj" />
-    </ItemGroup>
-
 </Project>

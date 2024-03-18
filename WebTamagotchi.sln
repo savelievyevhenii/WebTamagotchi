@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi.Identity", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi.GameLogic", "WebTamagotchi.GameLogic\WebTamagotchi.GameLogic.csproj", "{F6AB8A64-EE9E-4114-ACD8-62C2A579A879}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi.Dal", "WebTamagotchi.Dal\WebTamagotchi.Dal.csproj", "{FD766C9D-DB81-4876-B5CB-0F18BC4FE711}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTamagotchi.ApplicationServices", "WebTamagotchi.ApplicationServices\WebTamagotchi.ApplicationServices.csproj", "{B4E7D686-C3E2-4906-B3A4-3DB4FD08777F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{F6AB8A64-EE9E-4114-ACD8-62C2A579A879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6AB8A64-EE9E-4114-ACD8-62C2A579A879}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6AB8A64-EE9E-4114-ACD8-62C2A579A879}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD766C9D-DB81-4876-B5CB-0F18BC4FE711}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD766C9D-DB81-4876-B5CB-0F18BC4FE711}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD766C9D-DB81-4876-B5CB-0F18BC4FE711}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD766C9D-DB81-4876-B5CB-0F18BC4FE711}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4E7D686-C3E2-4906-B3A4-3DB4FD08777F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4E7D686-C3E2-4906-B3A4-3DB4FD08777F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4E7D686-C3E2-4906-B3A4-3DB4FD08777F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4E7D686-C3E2-4906-B3A4-3DB4FD08777F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

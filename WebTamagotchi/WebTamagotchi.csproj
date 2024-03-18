@@ -24,12 +24,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\WebTamagotchi.ApplicationServices\WebTamagotchi.ApplicationServices.csproj" />
+      <ProjectReference Include="..\WebTamagotchi.Dal\WebTamagotchi.Dal.csproj" />
       <ProjectReference Include="..\WebTamagotchi.GameLogic\WebTamagotchi.GameLogic.csproj" />
       <ProjectReference Include="..\WebTamagotchi.Identity\WebTamagotchi.Identity.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Asp.Versioning.Mvc" Version="8.0.0" />
+      <PackageReference Include="MediatR" Version="12.2.0" />
+      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />

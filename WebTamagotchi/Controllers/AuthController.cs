@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebTamagotchi.Converters.Identity;
-using WebTamagotchi.Dto.Identity;
-using WebTamagotchi.Identity.Services;
+using WebTamagotchi.ApplicationServices.Commands.IdentityCommands;
+using WebTamagotchi.ApplicationServices.Converters.Identity;
+using WebTamagotchi.ApplicationServices.Dto.Identity;
 
 namespace WebTamagotchi.Controllers;
 
@@ -11,11 +12,11 @@ namespace WebTamagotchi.Controllers;
 [Route("/api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthService _authService;
+    private readonly IMediator _mediator;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IMediator mediator)
     {
-        _authService = authService;
+        _mediator = mediator;
     }
 
     [HttpGet("test-auth")]
@@ -26,59 +27,74 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Authenticate([FromBody] AuthRequestDto requestDto)
+    public async Task<IActionResult> Authenticate([FromBody] AuthRequestDto requestDto,
+        CancellationToken cancellationToken)
     {
-        var request = AuthRequestConverter.ToModel(requestDto);
-        var result = await _authService.Authenticate(request);
+        var command = new AuthCommand { Email = requestDto.Email!, Password = requestDto.Password! };
 
-        return result.IsSuccess
-            ? Ok(result.Value)
-            : result.Error is UnauthorizedAccessException
-                ? Unauthorized()
-                : BadRequest($"Authentication failed: {result.Error}");
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest($"Authentication failed: {response.Error.Message}");
     }
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegistrationRequestDto requestDto)
+    public async Task<IActionResult> Register([FromBody] RegistrationRequestDto requestDto,
+        CancellationToken cancellationToken)
     {
-        var request = RegistrationRequestConverter.ToModel(requestDto);
-        var result = await _authService.Register(request);
+        var command = new RegisterCommand
+        {
+            Email = requestDto.Email!, Password = requestDto.Password!, PasswordConfirm = requestDto.PasswordConfirm!
+        };
 
-        return result.IsSuccess
-            ? await Authenticate(AuthRequestConverter.ToDto(result.Value))
-            : BadRequest($"Registration failed: {result.Error}");
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return response.IsSuccess
+            ? await Authenticate(AuthRequestConverter.ToDto(response.Value), new CancellationToken())
+            : BadRequest($"Registration failed: {response.Error.Message}");
     }
 
     [AllowAnonymous]
     [HttpPost("refresh-token")]
-    public async Task<IActionResult> RefreshToken(TokenModelDto tokenDto)
+    public async Task<IActionResult> RefreshToken([FromBody] TokenModelDto tokenDto,
+        CancellationToken cancellationToken)
     {
-        var tokenModel = TokenModelConverter.ToModel(tokenDto);
-        var result = await _authService.RefreshToken(tokenModel);
+        var command = new RefreshTokenCommand
+        {
+            AccessToken = tokenDto.AccessToken!,
+            RefreshToken = tokenDto.RefreshToken!
+        };
 
-        return result.IsSuccess
-            ? Ok(result.Value)
-            : BadRequest($"Refresh token failed: {result.Error}");
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest($"Refresh token failed: {response.Error.Message}");
     }
 
     [HttpPost("revoke/{username}")]
-    public async Task<IActionResult> Revoke(string username)
+    public async Task<IActionResult> Revoke(string username, CancellationToken cancellationToken)
     {
-        var result = await _authService.Revoke(username);
+        var command = new RevokeCommand { Username = username };
 
-        return result.IsSuccess
-            ? Ok($"User {username} revoked")
-            : BadRequest($"Revoke failed: {result.Error}");
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return response.HasValue
+            ? BadRequest($"Revoke failed: {response.Value.Message}")
+            : Ok($"User {username} revoked");
     }
 
     [HttpPost("revoke-all")]
-    public async Task<IActionResult> RevokeAll()
+    public async Task<IActionResult> RevokeAll(CancellationToken cancellationToken)
     {
-        var result = await _authService.RevokeAll();
+        var command = new RevokeAllCommand();
 
-        return result.IsSuccess
-            ? Ok($"All users revoked")
-            : BadRequest($"Revoke failed: {result.Error}");
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return response.HasValue
+            ? BadRequest($"Revoke failed: {response.Value.Message}")
+            : Ok("All users revoked");
     }
 }
