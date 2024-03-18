@@ -15,10 +15,6 @@ public class UserService : IUserService
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
 
-    public async Task<Result<IEnumerable<User>>> GetPlayers() => await GetUsersByRoleAsync(Role.Player);
-
-    public async Task<Result<IEnumerable<User>>> GetAdmins() => await GetUsersByRoleAsync(Role.Admin);
-
     public async Task<Result<User>> GetPlayer(string email) => await GetUserByEmailAndRoleAsync(email, Role.Player);
 
     public async Task<Result<User>> GetAdmin(string email) => await GetUserByEmailAndRoleAsync(email, Role.Admin);
@@ -42,15 +38,6 @@ public class UserService : IUserService
             : new UserNotPlayerException(email).ToString();
 
         return Result.Failure<User>(errorMessage);
-    }
-
-    private Task<Result<IEnumerable<User>>> GetUsersByRoleAsync(Role role)
-    {
-        var users = _userManager.Users?.Where(user => user.Role == role);
-
-        return Task.FromResult(users == null
-            ? Result.Failure<IEnumerable<User>>("Unable to retrieve users.")
-            : Result.Success<IEnumerable<User>>(users));
     }
 
     public async Task<Result> DeletePlayer(string email)

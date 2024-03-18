@@ -1,7 +1,6 @@
-﻿using CSharpFunctionalExtensions;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using WebTamagotchi.Dal.Repositories.Interfaces;
-using WebTamagotchi.Identity.Exceptions;
+using WebTamagotchi.Identity.Enums;
 using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Dal.Repositories;
@@ -9,10 +8,17 @@ namespace WebTamagotchi.Dal.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly WebTamagotchiDbContext _context;
-
-    public UserRepository(WebTamagotchiDbContext context)
+    private readonly UserManager<User> _userManager;
+    
+    public UserRepository(WebTamagotchiDbContext context, UserManager<User> userManager)
     {
         _context = context;
+        _userManager = userManager;
+    }
+
+    public async Task<IEnumerable<User>> GetUsersByRole(Role role, CancellationToken cancellationToken)
+    {
+        return _userManager.Users.Where(u => u.Role == role).ToList();
     }
 
     public Task<User?> Get(string email, string password, CancellationToken cancellationToken)

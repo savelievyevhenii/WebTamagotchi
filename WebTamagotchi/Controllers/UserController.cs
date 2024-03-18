@@ -1,32 +1,35 @@
-﻿// using Microsoft.AspNetCore.Authorization;
-// using Microsoft.AspNetCore.Mvc;
-// using WebTamagotchi.ApplicationServices.Converters.Identity;
-// using WebTamagotchi.ApplicationServices.Dto.Identity;
-// using WebTamagotchi.Identity.Services;
-//
-// namespace WebTamagotchi.Controllers;
-//
-// [Authorize]
-// [ApiController]
-// [Route("/api/[controller]")]
-// public class UserController : ControllerBase
-// {
-//     private readonly IUserService _userService;
-//
-//     public UserController(IUserService userService)
-//     {
-//         _userService = userService;
-//     }
-//
-//     [HttpGet("players")]
-//     public async Task<IActionResult> GetPlayers()
-//     {
-//         var result = await _userService.GetPlayers();
-//
-//         return result.IsSuccess
-//             ? Ok(result.Value)
-//             : BadRequest($"Getting players failed: {result.Error}");
-//     }
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WebTamagotchi.ApplicationServices.Commands.UserCommands;
+using WebTamagotchi.ApplicationServices.Dto.Identity;
+using WebTamagotchi.Identity.Enums;
+
+namespace WebTamagotchi.Controllers;
+
+[Authorize]
+[ApiController]
+[Route("/api/[controller]")]
+public class UserController : ControllerBase
+{
+     private readonly IMediator _mediator;
+
+     public UserController(IMediator mediator)
+     {
+          _mediator = mediator;
+     }
+     
+     [HttpGet("users")]
+     public async Task<IActionResult> GetUsersByRole(Role role, CancellationToken cancellationToken)
+     {
+         var command = new GetUsersByRoleCommand { Role = role };
+         
+         var response = await _mediator.Send(command, cancellationToken);
+
+         return response.IsSuccess
+             ? Ok(response.Value)
+             : BadRequest($"Getting users failed: {response.Error}");
+     }
 //
 //
 //     [HttpGet("player")]
@@ -89,4 +92,4 @@
 //             ? Ok(UserConverter.ToDto(result.Value))
 //             : BadRequest($"Changing user role failed: {result.Error}");
 //     }
-// }
+}

@@ -1,12 +1,15 @@
-﻿using WebTamagotchi.Identity.Models;
+﻿using WebTamagotchi.Identity.Enums;
+using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.Dal.Repositories.Interfaces;
 
 public interface IUserRepository
 {
-    public Task<User?> Get(string email, string password, CancellationToken cancellationToken);
+    Task<IEnumerable<User>> GetUsersByRole(Role role, CancellationToken cancellationToken);
 
-    public Task<User> Find(string email, CancellationToken cancellationToken);
+    Task<User?> Get(string email, string password, CancellationToken cancellationToken);
 
-    public Task Update(User user, CancellationToken cancellationToken);
+    Task<User> Find(string email, CancellationToken cancellationToken);
+
+    Task Update(User user, CancellationToken cancellationToken);
 }
