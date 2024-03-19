@@ -16,9 +16,9 @@ public class UserRepository : IUserRepository
         _userManager = userManager;
     }
 
-    public async Task<IEnumerable<User>> GetUsersByRole(Role role, CancellationToken cancellationToken)
+    public async Task<IEnumerable<User>> GetUsers(CancellationToken cancellationToken)
     {
-        return _userManager.Users.Where(u => u.Role == role).ToList();
+        return _userManager.Users;
     }
 
     public Task<User?> Get(string email, string password, CancellationToken cancellationToken)

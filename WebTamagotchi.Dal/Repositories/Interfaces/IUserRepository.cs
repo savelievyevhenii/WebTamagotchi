@@ -5,7 +5,7 @@ namespace WebTamagotchi.Dal.Repositories.Interfaces;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetUsersByRole(Role role, CancellationToken cancellationToken);
+    Task<IEnumerable<User>> GetUsers(CancellationToken cancellationToken);
 
     Task<User?> Get(string email, string password, CancellationToken cancellationToken);
 
