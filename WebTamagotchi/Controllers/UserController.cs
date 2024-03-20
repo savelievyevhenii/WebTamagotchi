@@ -43,46 +43,19 @@ public class UserController : ControllerBase
              ? Ok(response.Value)
              : BadRequest($"Getting player failed: {response.Error.Message}");
      }
-//
-//     [HttpDelete("player")]
-//     public async Task<IActionResult> DeletePlayer(string email)
-//     {
-//         var result = await _userService.DeletePlayer(email);
-//
-//         return result.IsSuccess
-//             ? Ok($"Player '{email}' deleted")
-//             : BadRequest($"Deleting player failed: {result.Error}");
-//     }
-//     
-//     [HttpGet("admins")]
-//     public async Task<IActionResult> GetAdmins()
-//     {
-//         var result = await _userService.GetAdmins();
-//
-//         return result.IsSuccess
-//             ? Ok(result.Value)
-//             : BadRequest($"Getting players failed: {result.Error}");
-//     }
-//     
-//     [HttpGet("admin")]
-//     public async Task<IActionResult> GetAdmin(string email)
-//     {
-//         var result = await _userService.GetAdmin(email);
-//
-//         return result.IsSuccess
-//             ? Ok(result.Value)
-//             : BadRequest($"Getting admin failed: {result.Error}");
-//     }
-//     
-//     [HttpDelete("admin")]
-//     public async Task<IActionResult> DeleteAdmin(string email)
-//     {
-//         var result = await _userService.DeleteAdmin(email);
-//
-//         return result.IsSuccess
-//             ? Ok($"Admin '{email}' deleted")
-//             : BadRequest($"Deleting player failed: {result.Error}");
-//     }
+
+     [HttpDelete("player")]
+     public async Task<IActionResult> DeleteUser(string email, CancellationToken cancellationToken)
+     {
+         var command = new DeleteUserCommand { Email = email };
+         
+         var response = await _mediator.Send(command, cancellationToken);
+
+         return response.HasValue
+             ? BadRequest($"Revoke failed: {response.Value.Message}")
+             : Ok($"Player '{email}' deleted");
+     }
+
 //     
 //     [HttpPost("change-role")]
 //     public async Task<IActionResult> ChangeRole(string email, RoleDto roleDto)
