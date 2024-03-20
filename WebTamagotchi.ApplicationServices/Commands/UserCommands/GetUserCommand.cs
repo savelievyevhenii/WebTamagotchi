@@ -7,5 +7,5 @@ namespace WebTamagotchi.ApplicationServices.Commands.UserCommands;
 
 public class GetUserCommand : IRequest<Result<User, Error>>
 {
-    public string Email { get; set; } = null!;
+    public string Email { get; init; } = null!;
 }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.ApplicationServices.Commands.UserCommands;
-using WebTamagotchi.ApplicationServices.Dto.Identity;
 using WebTamagotchi.Identity.Enums;
 
 namespace WebTamagotchi.Controllers;
@@ -10,34 +9,26 @@ namespace WebTamagotchi.Controllers;
 [Authorize]
 [ApiController]
 [Route("/api/[controller]")]
-public class UserController : ControllerBase
+public class UserController(ISender mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public UserController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet("users")]
     public async Task<IActionResult> GetUsersByRole(Role role, CancellationToken cancellationToken)
     {
         var command = new GetUsersByRoleCommand { Role = role };
 
-        var response = await _mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
             ? Ok(response.Value)
             : BadRequest($"Getting users failed: {response.Error.Message}");
     }
 
-
     [HttpGet("user")]
     public async Task<IActionResult> GetUser(string email, CancellationToken cancellationToken)
     {
         var command = new GetUserCommand { Email = email };
 
-        var response = await _mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
             ? Ok(response.Value)
@@ -49,20 +40,19 @@ public class UserController : ControllerBase
     {
         var command = new DeleteUserCommand { Email = email };
 
-        var response = await _mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
         return response.HasValue
             ? BadRequest($"Revoke failed: {response.Value.Message}")
             : Ok($"Player '{email}' deleted");
     }
 
-
     [HttpPost("change-role")]
     public async Task<IActionResult> ChangeRole(string email, Role role, CancellationToken cancellationToken)
     {
         var command = new ChangeRoleCommand { Email = email, Role = role };
 
-        var response = await _mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
             ? Ok(response.Value)

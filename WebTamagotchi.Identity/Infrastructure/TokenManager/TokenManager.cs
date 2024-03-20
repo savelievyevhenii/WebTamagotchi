@@ -6,7 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using WebTamagotchi.Identity.Models;
-using WebTamagotchi.Identity.Services.Impl;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace WebTamagotchi.Identity.Infrastructure.TokenManager;

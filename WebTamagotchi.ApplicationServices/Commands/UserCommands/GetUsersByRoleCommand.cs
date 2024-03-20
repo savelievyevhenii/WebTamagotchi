@@ -8,5 +8,5 @@ namespace WebTamagotchi.ApplicationServices.Commands.UserCommands;
 
 public class GetUsersByRoleCommand : IRequest<Result<IEnumerable<User>, Error>>
 {
-    public Role Role { get; set; }
+    public Role Role { get; init; }
 }

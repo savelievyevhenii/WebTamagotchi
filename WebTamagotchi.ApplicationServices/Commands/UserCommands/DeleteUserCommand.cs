@@ -6,5 +6,5 @@ namespace WebTamagotchi.ApplicationServices.Commands.UserCommands;
 
 public class DeleteUserCommand : IRequest<Maybe<Error>>
 {
-    public string Email { get; set; } = null!;
+    public string Email { get; init; } = null!;
 }
