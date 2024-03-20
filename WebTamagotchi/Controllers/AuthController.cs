@@ -10,15 +10,8 @@ namespace WebTamagotchi.Controllers;
 [Authorize]
 [ApiController]
 [Route("/api/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController(ISender mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public AuthController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet("test-auth")]
     public IActionResult TestAuthorization()
     {
@@ -32,7 +25,7 @@ public class AuthController : ControllerBase
     {
         var command = new AuthCommand { Email = requestDto.Email!, Password = requestDto.Password! };
 
-        var response = await _mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
             ? Ok(response.Value)
@@ -49,7 +42,7 @@ public class AuthController : ControllerBase
             Email = requestDto.Email!, Password = requestDto.Password!, PasswordConfirm = requestDto.PasswordConfirm!
         };
 
-        var response = await _mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
             ? await Authenticate(AuthRequestConverter.ToDto(response.Value), new CancellationToken())
@@ -67,7 +60,7 @@ public class AuthController : ControllerBase
             RefreshToken = tokenDto.RefreshToken!
         };
 
-        var response = await _mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
             ? Ok(response.Value)
@@ -79,7 +72,7 @@ public class AuthController : ControllerBase
     {
         var command = new RevokeCommand { Username = username };
 
-        var response = await _mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
         return response.HasValue
             ? BadRequest($"Revoke failed: {response.Value.Message}")
@@ -91,7 +84,7 @@ public class AuthController : ControllerBase
     {
         var command = new RevokeAllCommand();
 
-        var response = await _mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
         return response.HasValue
             ? BadRequest($"Revoke failed: {response.Value.Message}")

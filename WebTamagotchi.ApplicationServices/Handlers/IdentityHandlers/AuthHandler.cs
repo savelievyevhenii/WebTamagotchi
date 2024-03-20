@@ -8,34 +8,26 @@ using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.ApplicationServices.Handlers.IdentityHandlers;
 
-public class AuthHandler : IRequestHandler<AuthCommand, Result<AuthResponse, Error>>
+public class AuthHandler(UserManager<User> userManager, ITokenManager tokenManager)
+    : IRequestHandler<AuthCommand, Result<AuthResponse, Error>>
 {
-    private readonly UserManager<User> _userManager;
-    private readonly ITokenManager _tokenManager;
-
-    public AuthHandler(UserManager<User> userManager, ITokenManager tokenManager)
-    {
-        _userManager = userManager;
-        _tokenManager = tokenManager;
-    }
-    
     public async Task<Result<AuthResponse, Error>> Handle(AuthCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
             return new UserValidationError("email_not_valid", $"Invalid user email: {request.Email}");
         }
 
-        if (!await _userManager.CheckPasswordAsync(user, request.Password!))
+        if (!await userManager.CheckPasswordAsync(user, request.Password!))
         {
             return new UserValidationError("password_not_valid", "Wrong password");
         }
 
-        var accessToken = _tokenManager.CreateToken(user);
-        var refreshToken = _tokenManager.GenerateRefreshToken(user);
+        var accessToken = tokenManager.CreateToken(user);
+        var refreshToken = tokenManager.GenerateRefreshToken(user);
 
-        await _userManager.UpdateAsync(user);
+        await userManager.UpdateAsync(user);
 
         return new AuthResponse
         {

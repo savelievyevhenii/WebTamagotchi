@@ -8,20 +8,14 @@ using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.ApplicationServices.Handlers.IdentityHandlers;
 
-public class RegisterHandler : IRequestHandler<RegisterCommand, Result<AuthRequest, Error>>
+public class RegisterHandler(UserManager<User> userManager)
+    : IRequestHandler<RegisterCommand, Result<AuthRequest, Error>>
 {
-    private readonly UserManager<User> _userManager;
-
-    public RegisterHandler(UserManager<User> userManager)
-    {
-        _userManager = userManager;
-    }
-
     public async Task<Result<AuthRequest, Error>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         var user = new User { UserName = request.Email, Email = request.Email, Role = Role.Player };
 
-        await _userManager.CreateAsync(user, request.Password!);
+        await userManager.CreateAsync(user, request.Password!);
 
         return new AuthRequest
         {

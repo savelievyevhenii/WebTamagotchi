@@ -7,7 +7,7 @@ namespace WebTamagotchi.ApplicationServices.Commands.IdentityCommands;
 
 public class RefreshTokenCommand : IRequest<Result<TokenModel, Error>>
 {
-    public string AccessToken { get; set; } = null!;
+    public string AccessToken { get; init; } = null!;
 
-    public string RefreshToken { get; set; } = null!;
+    public string RefreshToken { get; init; } = null!;
 }

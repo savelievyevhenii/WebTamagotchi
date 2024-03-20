@@ -7,11 +7,11 @@ public static class AuthRequestConverter
 {
     public static AuthRequestDto ToDto(AuthRequest request)
     {
-        return new AuthRequestDto() { Email = request.Email, Password = request.Password };
+        return new AuthRequestDto { Email = request.Email, Password = request.Password };
     }
 
     public static AuthRequest ToModel(AuthRequestDto dto)
     {
-        return new AuthRequest() { Email = dto.Email, Password = dto.Password };
+        return new AuthRequest { Email = dto.Email, Password = dto.Password };
     }
 }

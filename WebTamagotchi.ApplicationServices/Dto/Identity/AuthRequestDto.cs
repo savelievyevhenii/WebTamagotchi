@@ -5,8 +5,8 @@ namespace WebTamagotchi.ApplicationServices.Dto.Identity;
 public class AuthRequestDto
 {
     [JsonPropertyName("email")]
-    public string? Email { get; set; }
+    public string? Email { get; init; }
     
     [JsonPropertyName("password")]
-    public string? Password { get; set; }
+    public string? Password { get; init; }
 }

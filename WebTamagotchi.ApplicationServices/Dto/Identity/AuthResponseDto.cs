@@ -5,14 +5,14 @@ namespace WebTamagotchi.ApplicationServices.Dto.Identity;
 public class AuthResponseDto
 {
     [JsonPropertyName("username")]
-    public string? Username { get; set; }
+    public string? Username { get; init; }
     
     [JsonPropertyName("email")]
-    public string? Email { get; set; }
+    public string? Email { get; init; }
     
     [JsonPropertyName("token")]
-    public string? Token { get; set; }
+    public string? Token { get; init; }
     
     [JsonPropertyName("refresh_token")]
-    public string? RefreshToken { get; set; }
+    public string? RefreshToken { get; init; }
 }

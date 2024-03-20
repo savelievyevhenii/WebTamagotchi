@@ -6,5 +6,5 @@ namespace WebTamagotchi.ApplicationServices.Commands.IdentityCommands;
 
 public class RevokeCommand : IRequest<Maybe<Error>>
 {
-    public string Username { get; set; } = null!;
+    public string Username { get; init; } = null!;
 }
