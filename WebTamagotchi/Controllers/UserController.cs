@@ -12,59 +12,60 @@ namespace WebTamagotchi.Controllers;
 [Route("/api/[controller]")]
 public class UserController : ControllerBase
 {
-     private readonly IMediator _mediator;
+    private readonly IMediator _mediator;
 
-     public UserController(IMediator mediator)
-     {
-          _mediator = mediator;
-     }
-     
-     [HttpGet("users")]
-     public async Task<IActionResult> GetUsersByRole(Role role, CancellationToken cancellationToken)
-     {
-         var command = new GetUsersByRoleCommand { Role = role };
-         
-         var response = await _mediator.Send(command, cancellationToken);
+    public UserController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
 
-         return response.IsSuccess
-             ? Ok(response.Value)
-             : BadRequest($"Getting users failed: {response.Error.Message}");
-     }
+    [HttpGet("users")]
+    public async Task<IActionResult> GetUsersByRole(Role role, CancellationToken cancellationToken)
+    {
+        var command = new GetUsersByRoleCommand { Role = role };
+
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest($"Getting users failed: {response.Error.Message}");
+    }
 
 
-     [HttpGet("user")]
-     public async Task<IActionResult> GetUser(string email, CancellationToken cancellationToken)
-     {
-         var command = new GetUserCommand { Email = email };
-         
-         var response = await _mediator.Send(command, cancellationToken);
-         
-         return response.IsSuccess
-             ? Ok(response.Value)
-             : BadRequest($"Getting player failed: {response.Error.Message}");
-     }
+    [HttpGet("user")]
+    public async Task<IActionResult> GetUser(string email, CancellationToken cancellationToken)
+    {
+        var command = new GetUserCommand { Email = email };
 
-     [HttpDelete("player")]
-     public async Task<IActionResult> DeleteUser(string email, CancellationToken cancellationToken)
-     {
-         var command = new DeleteUserCommand { Email = email };
-         
-         var response = await _mediator.Send(command, cancellationToken);
+        var response = await _mediator.Send(command, cancellationToken);
 
-         return response.HasValue
-             ? BadRequest($"Revoke failed: {response.Value.Message}")
-             : Ok($"Player '{email}' deleted");
-     }
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest($"Getting player failed: {response.Error.Message}");
+    }
 
-//     
-//     [HttpPost("change-role")]
-//     public async Task<IActionResult> ChangeRole(string email, RoleDto roleDto)
-//     {
-//         var role = RoleConverter.ToModel(roleDto);
-//         var result = await _userService.ChangeRole(email, role);
-//
-//         return result.IsSuccess
-//             ? Ok(UserConverter.ToDto(result.Value))
-//             : BadRequest($"Changing user role failed: {result.Error}");
-//     }
+    [HttpDelete("player")]
+    public async Task<IActionResult> DeleteUser(string email, CancellationToken cancellationToken)
+    {
+        var command = new DeleteUserCommand { Email = email };
+
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return response.HasValue
+            ? BadRequest($"Revoke failed: {response.Value.Message}")
+            : Ok($"Player '{email}' deleted");
+    }
+
+
+    [HttpPost("change-role")]
+    public async Task<IActionResult> ChangeRole(string email, Role role, CancellationToken cancellationToken)
+    {
+        var command = new ChangeRoleCommand { Email = email, Role = role };
+
+        var response = await _mediator.Send(command, cancellationToken);
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest($"Changing user role failed: {response.Error.Message}");
+    }
 }
