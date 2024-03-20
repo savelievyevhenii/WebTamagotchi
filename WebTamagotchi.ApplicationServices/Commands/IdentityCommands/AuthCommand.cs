@@ -1,11 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
+using WebTamagotchi.ApplicationServices.Dto.Identity;
 using WebTamagotchi.Identity.Errors;
-using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.ApplicationServices.Commands.IdentityCommands;
 
-public class AuthCommand : IRequest<Result<AuthResponse, Error>>
+public class AuthCommand : IRequest<Result<AuthResponseDto, Error>>
 {
     public string Email { get; init; } = null!;
 

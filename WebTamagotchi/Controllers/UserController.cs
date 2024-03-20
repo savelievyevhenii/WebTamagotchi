@@ -11,7 +11,7 @@ namespace WebTamagotchi.Controllers;
 [Route("/api/[controller]")]
 public class UserController(ISender mediator) : ControllerBase
 {
-    [HttpGet("users")]
+    [HttpGet("list")]
     public async Task<IActionResult> GetUsersByRole(Role role, CancellationToken cancellationToken)
     {
         var command = new GetUsersByRoleCommand { Role = role };
@@ -23,7 +23,7 @@ public class UserController(ISender mediator) : ControllerBase
             : BadRequest($"Getting users failed: {response.Error.Message}");
     }
 
-    [HttpGet("user")]
+    [HttpGet]
     public async Task<IActionResult> GetUser(string email, CancellationToken cancellationToken)
     {
         var command = new GetUserCommand { Email = email };

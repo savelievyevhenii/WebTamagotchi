@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using WebTamagotchi.ApplicationServices.Commands.IdentityCommands;
+using WebTamagotchi.ApplicationServices.Dto.Identity;
 using WebTamagotchi.Identity.Errors;
 using WebTamagotchi.Identity.Infrastructure.TokenManager;
 using WebTamagotchi.Identity.Models;
@@ -9,9 +10,9 @@ using WebTamagotchi.Identity.Models;
 namespace WebTamagotchi.ApplicationServices.Handlers.IdentityHandlers;
 
 public class RefreshTokenHandler(ITokenManager tokenManager, UserManager<User> userManager)
-    : IRequestHandler<RefreshTokenCommand, Result<TokenModel, Error>>
+    : IRequestHandler<RefreshTokenCommand, Result<TokenModelDto, Error>>
 {
-    public async Task<Result<TokenModel, Error>> Handle(RefreshTokenCommand request,
+    public async Task<Result<TokenModelDto, Error>> Handle(RefreshTokenCommand request,
         CancellationToken cancellationToken)
     {
         var principal = tokenManager.GetPrincipalFromExpiredToken(request.AccessToken);
@@ -33,7 +34,7 @@ public class RefreshTokenHandler(ITokenManager tokenManager, UserManager<User> u
         user.RefreshToken = newRefreshToken;
         userManager.UpdateAsync(user).GetAwaiter().GetResult();
 
-        return new TokenModel
+        return new TokenModelDto
         {
             AccessToken = newAccessToken,
             RefreshToken = newRefreshToken

@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using WebTamagotchi.ApplicationServices.Commands.IdentityCommands;
+using WebTamagotchi.ApplicationServices.Converters.Identity;
+using WebTamagotchi.ApplicationServices.Dto.Identity;
 using WebTamagotchi.Identity.Errors;
 using WebTamagotchi.Identity.Infrastructure.TokenManager;
 using WebTamagotchi.Identity.Models;
@@ -9,9 +11,9 @@ using WebTamagotchi.Identity.Models;
 namespace WebTamagotchi.ApplicationServices.Handlers.IdentityHandlers;
 
 public class AuthHandler(UserManager<User> userManager, ITokenManager tokenManager)
-    : IRequestHandler<AuthCommand, Result<AuthResponse, Error>>
+    : IRequestHandler<AuthCommand, Result<AuthResponseDto, Error>>
 {
-    public async Task<Result<AuthResponse, Error>> Handle(AuthCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AuthResponseDto, Error>> Handle(AuthCommand request, CancellationToken cancellationToken)
     {
         var user = await userManager.FindByEmailAsync(request.Email);
         if (user == null)
@@ -29,12 +31,9 @@ public class AuthHandler(UserManager<User> userManager, ITokenManager tokenManag
 
         await userManager.UpdateAsync(user);
 
-        return new AuthResponse
+        return new AuthResponseDto
         {
-            Username = user.UserName,
-            Email = user.Email!,
-            Token = accessToken,
-            RefreshToken = refreshToken
+            Username = user.UserName, Email = user.Email!, Token = accessToken, RefreshToken = refreshToken
         };
     }
 }

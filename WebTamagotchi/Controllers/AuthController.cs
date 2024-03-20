@@ -45,7 +45,7 @@ public class AuthController(ISender mediator) : ControllerBase
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? await Authenticate(AuthRequestConverter.ToDto(response.Value), new CancellationToken())
+            ? await Authenticate(response.Value, new CancellationToken())
             : BadRequest($"Registration failed: {response.Error.Message}");
     }
 
