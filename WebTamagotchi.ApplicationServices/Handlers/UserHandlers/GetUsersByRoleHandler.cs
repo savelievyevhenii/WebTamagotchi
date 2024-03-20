@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using WebTamagotchi.ApplicationServices.Commands.UserCommands;
-using WebTamagotchi.Dal.Repositories.Interfaces;
 using WebTamagotchi.Identity.Errors;
 using WebTamagotchi.Identity.Models;
 
@@ -9,25 +9,16 @@ namespace WebTamagotchi.ApplicationServices.Handlers.UserHandlers;
 
 public class GetUsersByRoleHandler : IRequestHandler<GetUsersByRoleCommand, Result<IEnumerable<User>, Error>>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly UserManager<User> _userManager;
 
-    public GetUsersByRoleHandler(IUserRepository userRepository)
+    public GetUsersByRoleHandler(UserManager<User> userManager)
     {
-        _userRepository = userRepository;
+        _userManager = userManager;
     }
-
+    
     public async Task<Result<IEnumerable<User>, Error>> Handle(GetUsersByRoleCommand request,
         CancellationToken cancellationToken)
     {
-        var users = await _userRepository.GetUsers(cancellationToken);
-
-        var filteredUsers = users.Where(u => u.Role == request.Role).ToList();
-        
-        if (filteredUsers.Count == 0)
-        {
-            return new UserNotFoundError("users_not_found", $"Users not found with role {request.Role}");
-        }
-        
-        return filteredUsers;
+        return _userManager.Users.Where(u => u.Role == request.Role).ToList();
     }
 }

@@ -1,23 +1,14 @@
-using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
-using CSharpFunctionalExtensions;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using WebTamagotchi.ApplicationServices.Commands.IdentityCommands;
 using WebTamagotchi.ApplicationServices.Handlers.IdentityHandlers;
 using WebTamagotchi.Dal;
-using WebTamagotchi.Dal.Repositories;
-using WebTamagotchi.Dal.Repositories.Interfaces;
-using WebTamagotchi.Identity.Errors;
 using WebTamagotchi.Identity.Infrastructure.TokenManager;
 using WebTamagotchi.Identity.Models;
-using WebTamagotchi.Identity.Services;
-using WebTamagotchi.Identity.Services.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +18,7 @@ builder.Services.AddDbContext<WebTamagotchiDbContext>(options =>
 
 // Services
 builder.Services.AddScoped<ITokenManager, TokenManager>();
-builder.Services.AddTransient<IUserRepository, UserRepository>();
+// builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);

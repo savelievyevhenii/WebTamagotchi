@@ -16,7 +16,6 @@ public class RevokeHandler : IRequestHandler<RevokeCommand, Maybe<Error>>
         _userManager = userManager;
     }
 
-
     public async Task<Maybe<Error>> Handle(RevokeCommand request, CancellationToken cancellationToken)
     {
 
