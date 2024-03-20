@@ -28,19 +28,21 @@ public class UserController : ControllerBase
 
          return response.IsSuccess
              ? Ok(response.Value)
-             : BadRequest($"Getting users failed: {response.Error}");
+             : BadRequest($"Getting users failed: {response.Error.Message}");
      }
-//
-//
-//     [HttpGet("player")]
-//     public async Task<IActionResult> GetPlayer(string email)
-//     {
-//         var result = await _userService.GetPlayer(email);
-//         
-//         return result.IsSuccess
-//             ? Ok(result.Value)
-//             : BadRequest($"Getting player failed: {result.Error}");
-//     }
+
+
+     [HttpGet("user")]
+     public async Task<IActionResult> GetUser(string email, CancellationToken cancellationToken)
+     {
+         var command = new GetUserCommand { Email = email };
+         
+         var response = await _mediator.Send(command, cancellationToken);
+         
+         return response.IsSuccess
+             ? Ok(response.Value)
+             : BadRequest($"Getting player failed: {response.Error.Message}");
+     }
 //
 //     [HttpDelete("player")]
 //     public async Task<IActionResult> DeletePlayer(string email)
