@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.ApplicationServices.Commands.UserCommands;
+using WebTamagotchi.ApplicationServices.Converters.Identity;
+using WebTamagotchi.ApplicationServices.Dto.Identity;
 using WebTamagotchi.Identity.Enums;
 
 namespace WebTamagotchi.Controllers;
@@ -12,9 +14,9 @@ namespace WebTamagotchi.Controllers;
 public class UserController(ISender mediator) : ControllerBase
 {
     [HttpGet("list")]
-    public async Task<IActionResult> GetUsersByRole(Role role, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetUsersByRole(RoleDto roleDto, CancellationToken cancellationToken)
     {
-        var command = new GetUsersByRoleCommand { Role = role };
+        var command = new GetUsersByRoleCommand { Role = RoleConverter.ToModel(roleDto) };
 
         var response = await mediator.Send(command, cancellationToken);
 
@@ -48,9 +50,9 @@ public class UserController(ISender mediator) : ControllerBase
     }
 
     [HttpPost("change-role")]
-    public async Task<IActionResult> ChangeRole(string email, Role role, CancellationToken cancellationToken)
+    public async Task<IActionResult> ChangeRole(string email, RoleDto roleDto, CancellationToken cancellationToken)
     {
-        var command = new ChangeRoleCommand { Email = email, Role = role };
+        var command = new ChangeRoleCommand { Email = email, Role = RoleConverter.ToModel(roleDto) };
 
         var response = await mediator.Send(command, cancellationToken);
 
