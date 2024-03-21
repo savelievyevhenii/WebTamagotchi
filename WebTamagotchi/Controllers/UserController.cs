@@ -49,6 +49,7 @@ public class UserController(ISender mediator) : ControllerBase
     }
 
     [HttpPost("change-role")]
+    [Authorize(Roles="Admin")]
     public async Task<IActionResult> ChangeRole(string email, RoleDto roleDto, CancellationToken cancellationToken)
     {
         var command = new ChangeRoleCommand { Email = email, Role = RoleConverter.ToModel(roleDto) };
