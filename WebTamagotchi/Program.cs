@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebTamagotchi.ApplicationServices.Handlers.IdentityHandlers;
 using WebTamagotchi.Dal;
+using WebTamagotchi.Dal.Repositories;
+using WebTamagotchi.Dal.Repositories.Interfaces;
 using WebTamagotchi.Identity.Infrastructure.TokenManager;
 using WebTamagotchi.Identity.Models;
 
@@ -18,7 +20,7 @@ builder.Services.AddDbContext<WebTamagotchiDbContext>(options =>
 
 // Services
 builder.Services.AddScoped<ITokenManager, TokenManager>();
-// builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IBathroomRepository, BathroomRepository>();
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);

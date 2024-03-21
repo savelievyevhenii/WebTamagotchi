@@ -5,9 +5,9 @@ namespace WebTamagotchi.ApplicationServices.Converters;
 
 public static class BathroomConverter
 {
-    public static BathroomDto ToDto(Bathroom bedroom) => new BathroomDto
+    public static BathroomDto ToDto(Bathroom bathroom) => new BathroomDto
     {
-        Name = bedroom.Name, Experience = bedroom.Experience, Cleanliness = bedroom.Cleanliness
+        Name = bathroom.Name, Experience = bathroom.Experience, Cleanliness = bathroom.Cleanliness
     };
 
     public static Bathroom ToModel(BathroomDto dto) => new Bathroom
