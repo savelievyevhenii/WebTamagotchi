@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.ApplicationServices.Commands.IdentityCommands;
-using WebTamagotchi.ApplicationServices.Converters.Identity;
 using WebTamagotchi.ApplicationServices.Dto.Identity;
 
 namespace WebTamagotchi.Controllers;

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebTamagotchi.ApplicationServices.Commands.UserCommands;
 using WebTamagotchi.ApplicationServices.Converters.Identity;
 using WebTamagotchi.ApplicationServices.Dto.Identity;
-using WebTamagotchi.Identity.Enums;
 
 namespace WebTamagotchi.Controllers;
 
