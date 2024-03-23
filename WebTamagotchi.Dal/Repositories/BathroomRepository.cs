@@ -15,4 +15,10 @@ public class BathroomRepository(WebTamagotchiDbContext dbContext) : IBathroomRep
     {
         return await dbContext.Bathrooms.SingleOrDefaultAsync(x => x.Name == name, cancellationToken);
     }
+
+    public async Task Create(Bathroom bathroom)
+    {
+        dbContext.Bathrooms.Add(bathroom);
+        await dbContext.SaveChangesAsync();
+    }
 }

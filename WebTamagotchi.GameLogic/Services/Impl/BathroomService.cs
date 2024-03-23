@@ -13,37 +13,6 @@
 //         _context = context;
 //     }
 //
-//
-//     public async Task<Result<Bathroom>> Get(string name)
-//     {
-//         try
-//         {
-//             var bathroom = await _context.Bathrooms.FirstOrDefaultAsync(b => b.Name.ToUpper().Equals(name.ToUpper()));
-//             return bathroom != null
-//                 ? Result.Success(bathroom)
-//                 : Result.Failure<Bathroom>($"Bathroom with name '{name}' not found.");
-//         }
-//         catch (Exception ex)
-//         {
-//             return Result.Failure<Bathroom>($"Failed to retrieve bathroom. Error: {ex.Message}");
-//         }
-//     }
-//
-//     public async Task<Result<List<Bathroom>>> GetAll()
-//     {
-//         try
-//         {
-//             var bathrooms = await _context.Bathrooms.ToListAsync();
-//             return bathrooms.Count != 0
-//                 ? Result.Success(bathrooms)
-//                 : Result.Failure<List<Bathroom>>("No bathrooms found.");
-//         }
-//         catch (Exception ex)
-//         {
-//             return Result.Failure<List<Bathroom>>($"Failed to retrieve bathrooms. Error: {ex.Message}");
-//         }
-//     }
-//
 //     public async Task<Result<Bathroom>> Create(Bathroom bathroom)
 //     {
 //         try
