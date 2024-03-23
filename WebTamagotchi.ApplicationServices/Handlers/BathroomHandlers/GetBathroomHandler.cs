@@ -14,13 +14,9 @@ public class GetBathroomHandler(IBathroomRepository bathroomRepository)
     public async Task<Result<BathroomDto, Error>> Handle(GetBathroomCommand request,
         CancellationToken cancellationToken)
     {
-        var bathroom = await bathroomRepository.Find(request.Name, cancellationToken);
-
-        if (bathroom == null)
-        {
-            return new BathroomNotFoundError("bathroom_not_found", $"Bathroom not found with name {request.Name}");
-        }
-
-        return BathroomConverter.ToDto(bathroom);
+        var bathroom = await bathroomRepository.Get(request.Name, cancellationToken);
+        return bathroom != null
+            ? BathroomConverter.ToDto(bathroom)
+            : new BathroomNotFoundError("bathroom_not_found", $"Bathroom not found with name {request.Name}");
     }
 }

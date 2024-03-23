@@ -15,24 +15,24 @@ public class BathroomController(ISender mediator) : ControllerBase
     {
         var command = new GetBathroomCommand { Name = name };
         
-        var result = await mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(command, cancellationToken);
 
-        return result.IsSuccess
-            ? Ok(result.Value)
-            : BadRequest(result.Error.Message);
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest(response.Error.Message);
     }
     
-    // [HttpGet("list")]
-    // public async Task<IActionResult> GetBathrooms(CancellationToken cancellationToken)
-    // {
-    //     var command = new GetBathroomsCommand();
-    //     
-    //     var result = await _bathroomService.GetAll();
-    //
-    //     return result.IsSuccess
-    //         ? Ok(result.Value)
-    //         : BadRequest(result.Error);
-    // }
+    [HttpGet("list")]
+    public async Task<IActionResult> GetBathrooms(CancellationToken cancellationToken)
+    {
+        var command = new GetBathroomsCommand();
+        
+        var response = await mediator.Send(command, cancellationToken);
+    
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest(response.Error);
+    }
     //
     // [HttpPost]
     // public async Task<IActionResult> CreateBathroom([FromBody] BathroomDto bathroomDto)

@@ -2,7 +2,9 @@
 
 namespace WebTamagotchi.Dal.Repositories.Interfaces;
 
-public interface IBathroomRepository 
+public interface IBathroomRepository
 {
-    Task<Bathroom?> Find(string name, CancellationToken cancellationToken);
+    Task<IEnumerable<Bathroom>> GetAll(CancellationToken cancellationToken);
+    
+    Task<Bathroom?> Get(string name, CancellationToken cancellationToken);
 }

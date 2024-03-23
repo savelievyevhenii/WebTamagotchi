@@ -6,7 +6,12 @@ namespace WebTamagotchi.Dal.Repositories;
 
 public class BathroomRepository(WebTamagotchiDbContext dbContext) : IBathroomRepository
 {
-    public async Task<Bathroom?> Find(string name, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Bathroom>> GetAll(CancellationToken cancellationToken)
+    {
+        return await dbContext.Bathrooms.ToListAsync(cancellationToken);
+    }
+
+    public async Task<Bathroom?> Get(string name, CancellationToken cancellationToken)
     {
         return await dbContext.Bathrooms.SingleOrDefaultAsync(x => x.Name == name, cancellationToken);
     }
