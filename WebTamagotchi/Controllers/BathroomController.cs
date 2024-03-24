@@ -40,23 +40,26 @@ public class BathroomController(ISender mediator) : ControllerBase
         CancellationToken cancellationToken)
     {
         var command = new CreateBathroomCommand(bathroomDto);
-        
+
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
             ? Ok(response.Value)
             : BadRequest(response.Error);
     }
-    //
-    // [HttpPost("update")]
-    // public async Task<IActionResult> UpdateBathroom([FromBody] BathroomDto bathroomDto, string id)
-    // {
-    //     var result = await _bathroomService.Update(BathroomConverter.ToModel(bathroomDto), id);
-    //
-    //     return result.IsSuccess
-    //         ? Ok(result.Value)
-    //         : BadRequest(result.Error);
-    // }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateBathroom([FromBody] BathroomDto bathroomDto,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateBathroomCommand(bathroomDto);
+
+        var response = await mediator.Send(command, cancellationToken);
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest(response.Error);
+    }
     //
     // [HttpDelete]
     // public async Task<IActionResult> DeleteBathroom(string name)

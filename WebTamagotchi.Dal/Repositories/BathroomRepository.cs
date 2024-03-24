@@ -21,4 +21,10 @@ public class BathroomRepository(WebTamagotchiDbContext dbContext) : IBathroomRep
         dbContext.Bathrooms.Add(bathroom);
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task Update(Bathroom bathroom)
+    {
+        dbContext.Bathrooms.Update(bathroom);
+        await dbContext.SaveChangesAsync();
+    }
 }

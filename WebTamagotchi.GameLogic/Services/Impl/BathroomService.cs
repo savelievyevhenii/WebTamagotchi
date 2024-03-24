@@ -1,35 +1,4 @@
-﻿// using CSharpFunctionalExtensions;
-// using Microsoft.EntityFrameworkCore;
-// using WebTamagotchi.GameLogic.Models;
-//
-// namespace WebTamagotchi.GameLogic.Services.Impl;
-//
-// public class BathroomService : IBathroomService
-// {
-//     private readonly GameLogicDbContext _context;
-//
-//     public BathroomService(GameLogicDbContext context)
-//     {
-//         _context = context;
-//     }
-//
-//     public async Task<Result<Bathroom>> Create(Bathroom bathroom)
-//     {
-//         try
-//         {
-//             bathroom.Id = Guid.NewGuid().ToString();
-//             _context.Bathrooms.Add(bathroom);
-//
-//             await _context.SaveChangesAsync();
-//
-//             return Result.Success(bathroom);
-//         }
-//         catch (Exception ex)
-//         {
-//             return Result.Failure<Bathroom>($"Failed to create bathroom. Error: {ex.Message}");
-//         }
-//     }
-//
+﻿
 //     public async Task<Result<Bathroom>> Update(Bathroom updatedBathroom, string id)
 //     {
 //         try
