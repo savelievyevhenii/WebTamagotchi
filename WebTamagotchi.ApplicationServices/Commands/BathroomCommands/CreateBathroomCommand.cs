@@ -7,5 +7,5 @@ namespace WebTamagotchi.ApplicationServices.Commands.BathroomCommands;
 
 public class CreateBathroomCommand(BathroomDto bathroomToCreate) : IRequest<Result<BathroomDto, Error>>
 {
-    public BathroomDto BathroomToCreate { get; set; } = bathroomToCreate;
+    public BathroomDto BathroomToCreate { get; } = bathroomToCreate;
 }

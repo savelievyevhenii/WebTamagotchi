@@ -45,7 +45,7 @@ public class BathroomController(ISender mediator) : ControllerBase
 
         return response.IsSuccess
             ? Ok(response.Value)
-            : BadRequest(response.Error);
+            : BadRequest(response.Error.Message);
     }
 
     [HttpPost("update")]
@@ -58,16 +58,18 @@ public class BathroomController(ISender mediator) : ControllerBase
 
         return response.IsSuccess
             ? Ok(response.Value)
-            : BadRequest(response.Error);
+            : BadRequest(response.Error.Message);
     }
-    //
-    // [HttpDelete]
-    // public async Task<IActionResult> DeleteBathroom(string name)
-    // {
-    //     var result = await _bathroomService.Delete(name);
-    //
-    //     return result.IsSuccess
-    //         ? Ok($"Bathroom '{name}' was deleted.")
-    //         : BadRequest(result.Error);
-    // }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteBathroom(string name, CancellationToken cancellationToken)
+    {
+        var command = new DeleteBathroomCommand { Name = name };
+
+        var response = await mediator.Send(command, cancellationToken);
+        
+        return response.HasValue
+            ? BadRequest($"{response.Value.Message}")
+            : Ok($"Bathroom '{name}' was deleted.");
+    }
 }

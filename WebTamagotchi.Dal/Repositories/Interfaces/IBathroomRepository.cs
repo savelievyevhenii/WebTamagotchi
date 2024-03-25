@@ -8,7 +8,9 @@ public interface IBathroomRepository
 
     Task<Bathroom?> Get(string name, CancellationToken cancellationToken);
 
-    Task Create(Bathroom bathroom);
+    Task Create(Bathroom bathroom, CancellationToken cancellationToken);
 
-    Task Update(Bathroom bathroom);
+    Task Update(Bathroom bathroom, CancellationToken cancellationToken);
+    
+    Task Delete(Bathroom bathroom, CancellationToken cancellationToken);
 }

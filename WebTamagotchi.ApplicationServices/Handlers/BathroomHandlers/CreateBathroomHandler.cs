@@ -16,7 +16,7 @@ public class CreateBathroomHandler(IBathroomRepository bathroomRepository)
         var bathroom = BathroomConverter.ToModel(request.BathroomToCreate);
         bathroom.Id = Guid.NewGuid().ToString();
 
-        await bathroomRepository.Create(bathroom);
+        await bathroomRepository.Create(bathroom, cancellationToken);
 
         return BathroomConverter.ToDto(bathroom);
     }

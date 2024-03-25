@@ -23,7 +23,7 @@ public class UpdateBathroomHandler(IBathroomRepository bathroomRepository)
         existingBathroom.Cleanliness = request.BathroomToUpdate.Cleanliness;
         existingBathroom.Experience = request.BathroomToUpdate.Experience;
 
-        await bathroomRepository.Update(existingBathroom);
+        await bathroomRepository.Update(existingBathroom, cancellationToken);
 
         return BathroomConverter.ToDto(existingBathroom);
     }
