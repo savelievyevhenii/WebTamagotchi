@@ -21,6 +21,7 @@ builder.Services.AddDbContext<WebTamagotchiDbContext>(options =>
 // Services
 builder.Services.AddScoped<ITokenManager, TokenManager>();
 builder.Services.AddTransient<IBathroomRepository, BathroomRepository>();
+builder.Services.AddTransient<IBedroomRepository, BedroomRepository>();
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
