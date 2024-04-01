@@ -5,7 +5,7 @@ using WebTamagotchi.ApplicationServices.Converters;
 using WebTamagotchi.ApplicationServices.Dto;
 using WebTamagotchi.Dal.Repositories.Interfaces;
 
-namespace WebTamagotchi.ApplicationServices.Handlers.BedroomHandlers;
+namespace WebTamagotchi.ApplicationServices.Handlers.BedroomsHandlers;
 
 public class GetBedroomsHandler(IBedroomRepository bedroomRepository)
     : IRequestHandler<GetBedroomsCommand, Result<IEnumerable<BedroomDto>>>
