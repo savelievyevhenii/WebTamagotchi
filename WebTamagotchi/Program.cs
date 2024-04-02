@@ -24,6 +24,7 @@ builder.Services.AddTransient<IBathroomRepository, BathroomRepository>();
 builder.Services.AddTransient<IBedroomRepository, BedroomRepository>();
 builder.Services.AddTransient<IFoodRepository, FoodRepository>();
 builder.Services.AddTransient<IGameRepository, GameRepository>();
+builder.Services.AddTransient<IPetRepository, PetRepository>();
 builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
