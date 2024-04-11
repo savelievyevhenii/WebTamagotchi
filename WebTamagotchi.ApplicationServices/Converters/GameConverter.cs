@@ -7,13 +7,13 @@ public static class GameConverter
 {
     public static GameDto ToDto(Game game) => new GameDto
     {
-        Name = game.Name, Experience = game.Experience, Dirtiness = game.Dirtiness, Fun = game.Fun,
+        Id = game.Id,Name = game.Name, Experience = game.Experience, Dirtiness = game.Dirtiness, Fun = game.Fun,
         Hunger = game.Hunger, Tiredness = game.Tiredness
     };
 
     public static Game ToModel(GameDto dto) => new Game
     {
-        Name = dto.Name, Experience = dto.Experience, Dirtiness = dto.Dirtiness, Fun = dto.Fun,
+        Id = dto.Id, Name = dto.Name, Experience = dto.Experience, Dirtiness = dto.Dirtiness, Fun = dto.Fun,
         Hunger = dto.Hunger, Tiredness = dto.Tiredness
     };
 }

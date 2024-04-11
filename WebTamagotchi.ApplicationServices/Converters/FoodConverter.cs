@@ -7,11 +7,11 @@ public static class FoodConverter
 {
     public static FoodDto ToDto(Food food) => new FoodDto
     {
-        Name = food.Name, Experience = food.Experience, Dirtiness = food.Dirtiness, Satiety = food.Satiety
+        Id = food.Id, Name = food.Name, Experience = food.Experience, Dirtiness = food.Dirtiness, Satiety = food.Satiety
     };
 
     public static Food ToModel(FoodDto dto) => new Food
     {
-        Name = dto.Name, Experience = dto.Experience, Dirtiness = dto.Dirtiness, Satiety = dto.Satiety
+        Id = dto.Id, Name = dto.Name, Experience = dto.Experience, Dirtiness = dto.Dirtiness, Satiety = dto.Satiety
     };
 }

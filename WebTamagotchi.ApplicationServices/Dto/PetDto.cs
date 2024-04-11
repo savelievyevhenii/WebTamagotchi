@@ -5,6 +5,9 @@ namespace WebTamagotchi.ApplicationServices.Dto;
 
 public class PetDto
 {    
+    [JsonPropertyName("petId")]
+    public string Id { get; set; } = null!;
+    
     [JsonPropertyName("name")]
     public string Name { get; init; } = null!;
     

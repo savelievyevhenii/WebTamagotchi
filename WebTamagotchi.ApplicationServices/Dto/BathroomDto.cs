@@ -4,6 +4,9 @@ namespace WebTamagotchi.ApplicationServices.Dto;
 
 public class BathroomDto
 {
+    [JsonPropertyName("bathroomId")]
+    public string Id { get; set; } = null!;
+    
     [JsonPropertyName("name")]
     public string Name { get; set; } = null!;
 
