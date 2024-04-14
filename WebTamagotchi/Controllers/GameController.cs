@@ -12,9 +12,9 @@ namespace WebTamagotchi.Controllers;
 public class GameController(ISender mediator) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetGame(string name, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetGame(string gameId, CancellationToken cancellationToken)
     {
-        var command = new GetGameCommand { Name = name };
+        var command = new GetGameCommand { Id = gameId };
 
         var response = await mediator.Send(command, cancellationToken);
 

@@ -6,7 +6,7 @@ public interface IGameRepository
 {
     Task<IEnumerable<Game>> GetAll(CancellationToken cancellationToken);
 
-    Task<Game?> Get(string name, CancellationToken cancellationToken);
+    Task<Game?> Get(string id, CancellationToken cancellationToken);
 
     Task Create(Game game, CancellationToken cancellationToken);
 

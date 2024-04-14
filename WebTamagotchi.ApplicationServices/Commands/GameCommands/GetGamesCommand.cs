@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
-using WebTamagotchi.ApplicationServices.Dto;
+using WebTamagotchi.GameLogic.Models;
 
 namespace WebTamagotchi.ApplicationServices.Commands.GameCommands;
 
-public class GetGamesCommand : IRequest<Result<IEnumerable<GameDto>>>;
+public class GetGamesCommand : IRequest<Result<IEnumerable<Game>>>;
