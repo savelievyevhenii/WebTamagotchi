@@ -13,9 +13,9 @@ namespace WebTamagotchi.Controllers;
 public class UserController(ISender mediator) : ControllerBase
 {
     [HttpGet("list")]
-    public async Task<IActionResult> GetUsersByRole(RoleDto roleDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetUsers(CancellationToken cancellationToken)
     {
-        var command = new GetUsersByRoleCommand { Role = RoleConverter.ToModel(roleDto) };
+        var command = new GetUsersCommand();
 
         var response = await mediator.Send(command, cancellationToken);
 
