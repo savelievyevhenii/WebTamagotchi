@@ -9,14 +9,14 @@ using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.ApplicationServices.Handlers.UserHandlers;
 
-public class GetUserHandler(UserManager<User> userManager) : IRequestHandler<GetUserCommand, Result<UserDto, Error>>
+public class GetUserHandler(UserManager<User> userManager) : IRequestHandler<GetUserCommand, Result<User, Error>>
 {
-    public async Task<Result<UserDto, Error>> Handle(GetUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<User, Error>> Handle(GetUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByEmailAsync(request.Email);
+        var user = await userManager.FindByIdAsync(request.Id);
 
         return user != null
-            ? UserConverter.ToDto(user)
-            : new UserNotFoundError("user_not_found", $"User not found with email {request.Email}");
+            ? user
+            : new UserNotFoundError("user_not_found", $"User not found with id {request.Id}");
     }
 }

@@ -25,9 +25,9 @@ public class UserController(ISender mediator) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetUser(string email, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetUser(string userId, CancellationToken cancellationToken)
     {
-        var command = new GetUserCommand { Email = email };
+        var command = new GetUserCommand { Id = userId };
 
         var response = await mediator.Send(command, cancellationToken);
 

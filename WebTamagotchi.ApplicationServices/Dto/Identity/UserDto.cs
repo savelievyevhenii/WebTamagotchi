@@ -4,9 +4,6 @@ namespace WebTamagotchi.ApplicationServices.Dto.Identity;
 
 public class UserDto
 {
-    [JsonPropertyName("userId")]
-    public string Id { get; set; } = null!;
-    
     [JsonPropertyName("username")]
     public string? Username { get; init; }
     
