@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using WebTamagotchi.ApplicationServices.Dto.Identity;
 using WebTamagotchi.Identity.Models;
 
 namespace WebTamagotchi.ApplicationServices.Dto;

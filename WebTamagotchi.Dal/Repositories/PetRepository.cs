@@ -11,9 +11,9 @@ public class PetRepository(WebTamagotchiDbContext dbContext) : IPetRepository
         return await dbContext.Pets.ToListAsync(cancellationToken);
     }
 
-    public async Task<Pet?> Get(string name, CancellationToken cancellationToken)
+    public async Task<Pet?> Get(string id, CancellationToken cancellationToken)
     {
-        return await dbContext.Pets.SingleOrDefaultAsync(x => x.Name == name, cancellationToken);
+        return await dbContext.Pets.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task Create(Pet pet, CancellationToken cancellationToken)

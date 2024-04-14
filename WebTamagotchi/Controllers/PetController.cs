@@ -12,9 +12,9 @@ namespace WebTamagotchi.Controllers;
 public class PetController(ISender mediator) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetPet(string name, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetPet(string petId, CancellationToken cancellationToken)
     {
-        var command = new GetPetCommand { Name = name };
+        var command = new GetPetCommand { Id = petId };
 
         var response = await mediator.Send(command, cancellationToken);
 
@@ -71,5 +71,19 @@ public class PetController(ISender mediator) : ControllerBase
         return response.HasValue
             ? BadRequest($"{response.Value.Message}")
             : Ok($"Pet '{name}' was deleted.");
+    }
+    
+    // TODO: feed, sleep, wash
+
+    [HttpPost("play")]
+    public async Task<IActionResult> Play(string petId, string gameId, CancellationToken cancellationToken)
+    {
+        var command = new PetPlayCommand { PetId = petId, GameId = gameId};
+
+        var response = await mediator.Send(command, cancellationToken);
+        
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest(response.Error.Message);
     }
 }

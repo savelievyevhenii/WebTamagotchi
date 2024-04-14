@@ -1,4 +1,5 @@
-﻿using WebTamagotchi.ApplicationServices.Dto;
+﻿using WebTamagotchi.ApplicationServices.Converters.Identity;
+using WebTamagotchi.ApplicationServices.Dto;
 using WebTamagotchi.GameLogic.Models;
 
 namespace WebTamagotchi.ApplicationServices.Converters;

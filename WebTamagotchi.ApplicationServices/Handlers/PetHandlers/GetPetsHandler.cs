@@ -1,20 +1,19 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
 using WebTamagotchi.ApplicationServices.Commands.PetCommands;
-using WebTamagotchi.ApplicationServices.Converters;
-using WebTamagotchi.ApplicationServices.Dto;
 using WebTamagotchi.Dal.Repositories.Interfaces;
+using WebTamagotchi.GameLogic.Models;
 
 namespace WebTamagotchi.ApplicationServices.Handlers.PetHandlers;
 
 public class GetPetsHandler(IPetRepository petRepository)
-    : IRequestHandler<GetPetsCommand, Result<IEnumerable<PetDto>>>
+    : IRequestHandler<GetPetsCommand, Result<IEnumerable<Pet>>>
 {
-    public async Task<Result<IEnumerable<PetDto>>> Handle(GetPetsCommand request,
+    public async Task<Result<IEnumerable<Pet>>> Handle(GetPetsCommand request,
         CancellationToken cancellationToken)
     {
         var pets = await petRepository.GetAll(cancellationToken);
         
-        return pets.Select(PetConverter.ToDto).ToList();
+        return pets.ToList();
     }
 }
