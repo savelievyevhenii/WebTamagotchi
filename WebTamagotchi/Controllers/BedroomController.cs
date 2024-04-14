@@ -12,9 +12,9 @@ namespace WebTamagotchi.Controllers;
 public class BedroomController(ISender mediator) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetBedroom(string name, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetBedroom(string bedroomId, CancellationToken cancellationToken)
     {
-        var command = new GetBedroomCommand { Name = name };
+        var command = new GetBedroomCommand { Id = bedroomId };
 
         var response = await mediator.Send(command, cancellationToken);
 

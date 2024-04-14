@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
-using WebTamagotchi.ApplicationServices.Dto;
+using WebTamagotchi.GameLogic.Models;
 
 namespace WebTamagotchi.ApplicationServices.Commands.BedroomCommands;
 
-public class GetBedroomsCommand : IRequest<Result<IEnumerable<BedroomDto>>>;
+public class GetBedroomsCommand : IRequest<Result<IEnumerable<Bedroom>>>;
