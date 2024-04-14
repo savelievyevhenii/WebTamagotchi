@@ -6,7 +6,7 @@ public interface IFoodRepository
 {
     Task<IEnumerable<Food>> GetAll(CancellationToken cancellationToken);
 
-    Task<Food?> Get(string name, CancellationToken cancellationToken);
+    Task<Food?> Get(string id, CancellationToken cancellationToken);
 
     Task Create(Food food, CancellationToken cancellationToken);
 

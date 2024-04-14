@@ -11,9 +11,9 @@ public class FoodRepository(WebTamagotchiDbContext dbContext) : IFoodRepository
         return await dbContext.Foods.ToListAsync(cancellationToken);
     }
 
-    public async Task<Food?> Get(string name, CancellationToken cancellationToken)
+    public async Task<Food?> Get(string id, CancellationToken cancellationToken)
     {
-        return await dbContext.Foods.SingleOrDefaultAsync(x => x.Name == name, cancellationToken);
+        return await dbContext.Foods.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task Create(Food food, CancellationToken cancellationToken)

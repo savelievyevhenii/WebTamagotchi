@@ -12,9 +12,9 @@ namespace WebTamagotchi.Controllers;
 public class FoodController(ISender mediator) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetFood(string name, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetFood(string foodId, CancellationToken cancellationToken)
     {
-        var command = new GetFoodCommand { Name = name };
+        var command = new GetFoodCommand { Id = foodId };
 
         var response = await mediator.Send(command, cancellationToken);
 

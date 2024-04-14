@@ -1,11 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
-using WebTamagotchi.ApplicationServices.Dto;
 using WebTamagotchi.GameLogic.Errors;
+using WebTamagotchi.GameLogic.Models;
 
 namespace WebTamagotchi.ApplicationServices.Commands.FoodCommands;
 
-public class GetFoodCommand : IRequest<Result<FoodDto, Error>>
+public class GetFoodCommand : IRequest<Result<Food, Error>>
 {
-    public string Name { get; init; } = null!;
+    public string Id { get; init; } = null!;
 }

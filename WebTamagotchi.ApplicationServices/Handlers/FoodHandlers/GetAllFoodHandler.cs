@@ -1,20 +1,19 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
 using WebTamagotchi.ApplicationServices.Commands.FoodCommands;
-using WebTamagotchi.ApplicationServices.Converters;
-using WebTamagotchi.ApplicationServices.Dto;
 using WebTamagotchi.Dal.Repositories.Interfaces;
+using WebTamagotchi.GameLogic.Models;
 
 namespace WebTamagotchi.ApplicationServices.Handlers.FoodHandlers;
 
 public class GetAllFoodHandler(IFoodRepository foodRepository)
-    : IRequestHandler<GetAllFoodCommand, Result<IEnumerable<FoodDto>>>
+    : IRequestHandler<GetAllFoodCommand, Result<IEnumerable<Food>>>
 {
-    public async Task<Result<IEnumerable<FoodDto>>> Handle(GetAllFoodCommand request,
+    public async Task<Result<IEnumerable<Food>>> Handle(GetAllFoodCommand request,
         CancellationToken cancellationToken)
     {
         var foods = await foodRepository.GetAll(cancellationToken);
         
-        return foods.Select(FoodConverter.ToDto).ToList();
+        return foods.ToList();
     }
 }
