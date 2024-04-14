@@ -6,7 +6,7 @@ public interface IBathroomRepository
 {
     Task<IEnumerable<Bathroom>> GetAll(CancellationToken cancellationToken);
 
-    Task<Bathroom?> Get(string name, CancellationToken cancellationToken);
+    Task<Bathroom?> Get(string id, CancellationToken cancellationToken);
 
     Task Create(Bathroom bathroom, CancellationToken cancellationToken);
 

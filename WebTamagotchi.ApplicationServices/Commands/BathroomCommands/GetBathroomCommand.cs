@@ -1,11 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
-using WebTamagotchi.ApplicationServices.Dto;
 using WebTamagotchi.GameLogic.Errors;
+using WebTamagotchi.GameLogic.Models;
 
 namespace WebTamagotchi.ApplicationServices.Commands.BathroomCommands;
 
-public class GetBathroomCommand : IRequest<Result<BathroomDto, Error>>
+public class GetBathroomCommand : IRequest<Result<Bathroom, Error>>
 {
-    public string Name { get; init; } = null!;
+    public string Id { get; init; } = null!;
 }

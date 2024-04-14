@@ -11,9 +11,9 @@ public class BathroomRepository(WebTamagotchiDbContext dbContext) : IBathroomRep
         return await dbContext.Bathrooms.ToListAsync(cancellationToken);
     }
 
-    public async Task<Bathroom?> Get(string name, CancellationToken cancellationToken)
+    public async Task<Bathroom?> Get(string id, CancellationToken cancellationToken)
     {
-        return await dbContext.Bathrooms.SingleOrDefaultAsync(x => x.Name == name, cancellationToken);
+        return await dbContext.Bathrooms.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task Create(Bathroom bathroom, CancellationToken cancellationToken)
