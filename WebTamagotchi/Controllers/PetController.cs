@@ -48,19 +48,6 @@ public class PetController(ISender mediator) : ControllerBase
             : BadRequest(response.Error.Message);
     }
 
-    [HttpPost("update")]
-    public async Task<IActionResult> UpdatePet([FromBody] PetDto petDto,
-        CancellationToken cancellationToken)
-    {
-        var command = new UpdatePetCommand(petDto);
-
-        var response = await mediator.Send(command, cancellationToken);
-
-        return response.IsSuccess
-            ? Ok(response.Value)
-            : BadRequest(response.Error.Message);
-    }
-
     [HttpDelete]
     public async Task<IActionResult> DeletePet(string name, CancellationToken cancellationToken)
     {

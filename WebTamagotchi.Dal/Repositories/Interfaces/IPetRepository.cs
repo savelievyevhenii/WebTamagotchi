@@ -6,7 +6,7 @@ public interface IPetRepository
 {
     Task<IEnumerable<Pet>> GetAll(CancellationToken cancellationToken);
 
-    Task<Pet?> Get(string name, CancellationToken cancellationToken);
+    Task<Pet?> Get(string id, CancellationToken cancellationToken);
 
     Task Create(Pet pet, CancellationToken cancellationToken);
 
