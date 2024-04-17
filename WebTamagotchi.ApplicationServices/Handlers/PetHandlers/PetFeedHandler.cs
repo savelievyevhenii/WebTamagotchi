@@ -24,9 +24,9 @@ public class PetFeedHandler(IPetRepository petRepository, IFoodRepository foodRe
             return GameNotFoundError.GameNotFound;
         }
 
-        pet.ExpToLevelUp -= food.Experience;
-        pet.Hunger -= food.Satiety;
-        pet.Dirtiness += food.Dirtiness;
+        pet.ExpToLevelUp = Math.Max(0, pet.ExpToLevelUp - food.Experience);
+        pet.Hunger = Math.Max(0, pet.Hunger - food.Satiety);
+        pet.Dirtiness = Math.Min(110, pet.Dirtiness + food.Dirtiness);
 
         await petRepository.Update(pet, cancellationToken);
 

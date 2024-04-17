@@ -24,8 +24,8 @@ public class PetSleepHandler(IPetRepository petRepository, IBedroomRepository be
             return GameNotFoundError.GameNotFound;
         }
 
-        pet.ExpToLevelUp -= bedroom.Experience;
-        pet.Tiredness -= bedroom.Energy;
+        pet.ExpToLevelUp = Math.Max(0, pet.ExpToLevelUp - bedroom.Experience);
+        pet.Tiredness = Math.Max(0, pet.Tiredness - bedroom.Energy);
 
         await petRepository.Update(pet, cancellationToken);
 

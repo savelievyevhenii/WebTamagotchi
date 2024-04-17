@@ -24,8 +24,8 @@ public class PetWashHandler(IPetRepository petRepository, IBathroomRepository ba
             return GameNotFoundError.GameNotFound;
         }
 
-        pet.ExpToLevelUp -= bathroom.Experience;
-        pet.Dirtiness -= bathroom.Cleanliness;
+        pet.ExpToLevelUp = Math.Max(0, pet.ExpToLevelUp - bathroom.Experience);
+        pet.Dirtiness = Math.Max(0, pet.Dirtiness - bathroom.Cleanliness);
 
         await petRepository.Update(pet, cancellationToken);
 

@@ -24,11 +24,11 @@ public class PetPlayHandler(IPetRepository petRepository, IGameRepository gameRe
             return GameNotFoundError.GameNotFound;
         }
 
-        pet.ExpToLevelUp -= game.Experience;
-        pet.Bore -= game.Fun;
-        pet.Hunger += game.Hunger;
-        pet.Dirtiness += game.Dirtiness;
-        pet.Tiredness += game.Tiredness;
+        pet.ExpToLevelUp = Math.Max(0, pet.ExpToLevelUp - game.Experience);
+        pet.Bore = Math.Max(0, pet.Bore - game.Fun);
+        pet.Hunger = Math.Min(100, pet.Hunger + game.Hunger);
+        pet.Dirtiness = Math.Min(100, pet.Dirtiness + game.Dirtiness);
+        pet.Tiredness = Math.Min(100, pet.Tiredness + game.Tiredness);
 
         await petRepository.Update(pet, cancellationToken);
 
