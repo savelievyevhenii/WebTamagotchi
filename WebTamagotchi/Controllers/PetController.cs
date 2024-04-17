@@ -59,16 +59,26 @@ public class PetController(ISender mediator) : ControllerBase
             ? BadRequest($"{response.Value.Message}")
             : Ok($"Pet '{name}' was deleted.");
     }
-    
-    // TODO: feed, sleep, wash
 
     [HttpPost("play")]
     public async Task<IActionResult> Play(string petId, string gameId, CancellationToken cancellationToken)
     {
-        var command = new PetPlayCommand { PetId = petId, GameId = gameId};
+        var command = new PetPlayCommand { PetId = petId, GameId = gameId };
 
         var response = await mediator.Send(command, cancellationToken);
-        
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest(response.Error.Message);
+    }
+
+    [HttpPost("feed")]
+    public async Task<IActionResult> Feed(string petId, string foodId, CancellationToken cancellationToken)
+    {
+        var command = new PetFeedCommand { PetId = petId, FoodId = foodId };
+
+        var response = await mediator.Send(command, cancellationToken);
+
         return response.IsSuccess
             ? Ok(response.Value)
             : BadRequest(response.Error.Message);

@@ -7,27 +7,25 @@ using WebTamagotchi.GameLogic.Models;
 
 namespace WebTamagotchi.ApplicationServices.Handlers.PetHandlers;
 
-public class PetPlayHandler(IPetRepository petRepository, IGameRepository gameRepository)
-    : IRequestHandler<PetPlayCommand, Result<Pet, Error>>
+public class PetFeedHandler(IPetRepository petRepository, IFoodRepository foodRepository)
+    : IRequestHandler<PetFeedCommand, Result<Pet, Error>>
 {
-    public async Task<Result<Pet, Error>> Handle(PetPlayCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Pet, Error>> Handle(PetFeedCommand request, CancellationToken cancellationToken)
     {
         var pet = await petRepository.Get(request.PetId, cancellationToken);
-        var game = await gameRepository.Get(request.GameId, cancellationToken);
+        var food = await foodRepository.Get(request.FoodId, cancellationToken);
         if (pet == null)
         {
             return PetNotFoundError.PetNotFound;
         }
-        if (game == null)
+        if (food == null)
         {
             return GameNotFoundError.GameNotFound;
         }
 
-        pet.ExpToLevelUp -= game.Experience;
-        pet.Bore -= game.Fun;
-        pet.Hunger += game.Hunger;
-        pet.Dirtiness += game.Dirtiness;
-        pet.Tiredness += game.Tiredness;
+        pet.ExpToLevelUp -= food.Experience;
+        pet.Hunger -= food.Satiety;
+        pet.Dirtiness += food.Dirtiness;
 
         await petRepository.Update(pet, cancellationToken);
         
