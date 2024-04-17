@@ -10,7 +10,7 @@ public class Pet
 
     public string Name { get; init; } = null!;
 
-    public int Level { get; init; }
+    public int Level { get; set; }
 
     public int ExpToLevelUp { get; set; }
 

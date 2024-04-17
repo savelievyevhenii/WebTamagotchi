@@ -18,6 +18,7 @@ public class PetWashHandler(IPetRepository petRepository, IBathroomRepository ba
         {
             return PetNotFoundError.PetNotFound;
         }
+
         if (bathroom == null)
         {
             return GameNotFoundError.GameNotFound;
@@ -27,7 +28,7 @@ public class PetWashHandler(IPetRepository petRepository, IBathroomRepository ba
         pet.Dirtiness -= bathroom.Cleanliness;
 
         await petRepository.Update(pet, cancellationToken);
-        
+
         return pet;
     }
 }

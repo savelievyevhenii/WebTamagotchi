@@ -18,6 +18,7 @@ public class PetFeedHandler(IPetRepository petRepository, IFoodRepository foodRe
         {
             return PetNotFoundError.PetNotFound;
         }
+
         if (food == null)
         {
             return GameNotFoundError.GameNotFound;
@@ -28,7 +29,7 @@ public class PetFeedHandler(IPetRepository petRepository, IFoodRepository foodRe
         pet.Dirtiness += food.Dirtiness;
 
         await petRepository.Update(pet, cancellationToken);
-        
+
         return pet;
     }
 }

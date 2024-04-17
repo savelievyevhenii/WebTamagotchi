@@ -18,6 +18,7 @@ public class PetPlayHandler(IPetRepository petRepository, IGameRepository gameRe
         {
             return PetNotFoundError.PetNotFound;
         }
+
         if (game == null)
         {
             return GameNotFoundError.GameNotFound;
@@ -30,7 +31,7 @@ public class PetPlayHandler(IPetRepository petRepository, IGameRepository gameRe
         pet.Tiredness += game.Tiredness;
 
         await petRepository.Update(pet, cancellationToken);
-        
+
         return pet;
     }
 }

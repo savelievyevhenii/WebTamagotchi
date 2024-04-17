@@ -107,4 +107,16 @@ public class PetController(ISender mediator) : ControllerBase
             ? Ok(response.Value)
             : BadRequest(response.Error.Message);
     }
+    
+    [HttpPost("lvl-up")]
+    public async Task<IActionResult> LvlUp(string petId, CancellationToken cancellationToken)
+    {
+        var command = new PetLvlUpCommand { PetId = petId };
+
+        var response = await mediator.Send(command, cancellationToken);
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest(response.Error.Message);
+    }
 }
