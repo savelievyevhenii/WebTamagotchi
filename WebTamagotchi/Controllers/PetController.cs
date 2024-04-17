@@ -83,4 +83,16 @@ public class PetController(ISender mediator) : ControllerBase
             ? Ok(response.Value)
             : BadRequest(response.Error.Message);
     }
+    
+    [HttpPost("sleep")]
+    public async Task<IActionResult> Sleep(string petId, string bedroomId, CancellationToken cancellationToken)
+    {
+        var command = new PetSleepCommand { PetId = petId, BedroomId = bedroomId };
+
+        var response = await mediator.Send(command, cancellationToken);
+
+        return response.IsSuccess
+            ? Ok(response.Value)
+            : BadRequest(response.Error.Message);
+    }
 }
