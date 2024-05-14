@@ -18,7 +18,7 @@ public class RegisterHandler(UserManager<User> userManager)
 
         await userManager.CreateAsync(user, request.Password!);
 
-        return new AuthRequestDto()
+        return new AuthRequestDto
         {
             Email = request.Email,
             Password = request.Password
