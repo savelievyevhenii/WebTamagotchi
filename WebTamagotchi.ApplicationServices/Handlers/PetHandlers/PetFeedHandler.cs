@@ -18,10 +18,9 @@ public class PetFeedHandler(IPetRepository petRepository, IFoodRepository foodRe
         {
             return PetNotFoundError.PetNotFound;
         }
-
         if (food == null)
         {
-            return GameNotFoundError.GameNotFound;
+            return FoodNotFoundError.FoodNotFound;
         }
 
         pet.ExpToLevelUp = Math.Max(0, pet.ExpToLevelUp - food.Experience);

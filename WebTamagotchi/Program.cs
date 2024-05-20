@@ -31,7 +31,7 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<AuthHandler>());
 
 // Controllers
-builder.Services.AddControllers()
+builder.Services.AddControllers(options => { options.AllowEmptyInputInBodyModelBinding = true; })
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
@@ -52,28 +52,28 @@ builder.Services
 // Jwt Authentication
 var jwtTokenSettings = builder.Configuration.GetSection("JwtTokenSettings");
 builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.IncludeErrorDetails = true;
-    options.TokenValidationParameters = new TokenValidationParameters()
     {
-        ClockSkew = TimeSpan.Zero,
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtTokenSettings.GetValue<string>("ValidIssuer"),
-        ValidAudience = jwtTokenSettings.GetValue<string>("ValidAudience"),
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtTokenSettings.GetValue<string>("SymmetricSecurityKey")!)
-        ),
-    };
-});
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.IncludeErrorDetails = true;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ClockSkew = TimeSpan.Zero,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtTokenSettings.GetValue<string>("ValidIssuer"),
+            ValidAudience = jwtTokenSettings.GetValue<string>("ValidAudience"),
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtTokenSettings.GetValue<string>("SymmetricSecurityKey")!)
+            ),
+        };
+    });
 
 // Swagger
 builder.Services.AddSwaggerGen(options =>
