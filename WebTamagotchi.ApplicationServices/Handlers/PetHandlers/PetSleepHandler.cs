@@ -26,7 +26,7 @@ public class PetSleepHandler(IPetRepository petRepository, IBedroomRepository be
 
         pet.ExpToLevelUp = Math.Max(0, pet.ExpToLevelUp - bedroom.Experience);
         pet.Tiredness = Math.Max(0, pet.Tiredness - bedroom.Energy);
-        pet.Bore = Math.Min(100, pet.Bore + 60); // in db later
+        pet.Bore = Math.Min(100, pet.Bore + 50); // in db later
 
         await petRepository.Update(pet, cancellationToken);
 

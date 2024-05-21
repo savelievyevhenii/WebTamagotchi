@@ -26,7 +26,6 @@ public class PetWashHandler(IPetRepository petRepository, IBathroomRepository ba
 
         pet.ExpToLevelUp = Math.Max(0, pet.ExpToLevelUp - bathroom.Experience);
         pet.Dirtiness = Math.Max(0, pet.Dirtiness - bathroom.Cleanliness);
-        pet.Bore = Math.Min(100, pet.Bore + 20); // in db later
 
         await petRepository.Update(pet, cancellationToken);
 
