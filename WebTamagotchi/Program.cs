@@ -112,7 +112,7 @@ builder.Services.AddCors(options =>
             .AllowAnyOrigin();
     });
 });
-
+builder.AddOpenAIChatGPT(builder.Configuration);
 
 var app = builder.Build();
 
